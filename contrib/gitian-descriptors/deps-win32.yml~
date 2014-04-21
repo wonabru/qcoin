@@ -42,7 +42,7 @@ script: |
   cd miniupnpc-1.6
   sed 's/dllwrap -k --driver-name gcc/$(DLLWRAP) -k --driver-name $(CC)/' -i Makefile.mingw
   sed 's|wingenminiupnpcstrings $< $@|./wingenminiupnpcstrings $< $@|' -i Makefile.mingw
-  make -f Makefile.mingw DLLWRAP=i686-w64-mingw32-dllwrap CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar
+  make -f Makefile.mingw PREFIX=i686-w64-mingw32-
   cd ..
   mv miniupnpc-1.6 miniupnpc
   #
@@ -53,13 +53,13 @@ script: |
   #
   tar xzf libpng-1.5.9.tar.gz
   cd libpng-1.5.9
-  ./configure -disable-shared 
+  ./configure -disable-shared PREFIX=i686-w64-mingw32-
   make $MAKEOPTS
   cd ..
   #
   tar xjf qrencode-3.2.0.tar.bz2
   cd qrencode-3.2.0
-  ./configure
+  ./configure PREFIX=i686-w64-mingw32-
   make $MAKEOPTS
   cd ..
   #
