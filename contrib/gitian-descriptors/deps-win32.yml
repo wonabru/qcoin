@@ -3,7 +3,7 @@ name: "PLM-deps"
 suites:
 - "precise"
 architectures:
-- "amd64"
+- "i386"
 packages:
 - "build-essential"
 - "libssl-dev"

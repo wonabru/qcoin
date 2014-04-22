@@ -3,7 +3,7 @@ name: "PLM"
 suites:
 - "precise"
 architectures:
-- "amd64"
+- "i386"
 packages: 
 - "libdb4.8++-dev"
 - "qt4-qmake"
