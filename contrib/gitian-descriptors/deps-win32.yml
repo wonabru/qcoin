@@ -1,5 +1,5 @@
 ---
-name: "qcoin-deps"
+name: "PLM-deps"
 suites:
 - "precise"
 architectures:

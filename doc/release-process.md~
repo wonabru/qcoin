@@ -29,6 +29,7 @@ Release Process
 
  From a directory containing the qcoin source, gitian-builder and gitian.sigs
   
+	sudo apt-get install mingw-w64
 	export SIGNER=(your gitian key, ie bluematt, sipa, etc)
 	export VERSION=0.9.9
 	pushd ./gitian-builder
