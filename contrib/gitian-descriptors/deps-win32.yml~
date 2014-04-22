@@ -5,6 +5,7 @@ suites:
 architectures:
 - "amd64"
 packages:
+- "mingw-w64"
 - "mingw32"
 - "git-core"
 - "zip"
