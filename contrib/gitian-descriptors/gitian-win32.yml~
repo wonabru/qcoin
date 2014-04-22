@@ -1,5 +1,5 @@
 ---
-name: "qcoin"
+name: "PLM"
 suites:
 - "precise"
 architectures:
@@ -15,8 +15,8 @@ remotes: []
 files:
 - "qt-win32-4.8.3-gitian-r1.zip"
 - "boost-win32-1.50.0-gitian2.zip"
-- "bitcoin-deps-0.0.5.zip"
-- "qcoin.zip"
+- "PLM-deps-0.0.5.zip"
+- "PLM.zip"
 script: |
   #
   mkdir $HOME/qt
@@ -38,7 +38,7 @@ script: |
   mv include/boost .
   cd ..
   #
-  unzip qcoin.zip
+  unzip PLM.zip
   #
   find -type f | xargs touch --date="$REFERENCE_DATETIME"
   #
@@ -58,7 +58,7 @@ script: |
   export LD_PRELOAD=/usr/lib/faketime/libfaketime.so.1
   export FAKETIME=$REFERENCE_DATETIME
   export TZ=UTC
-  make -f makefile.linux-mingw $MAKEOPTS DEPSDIR=$HOME/build qcoind.exe USE_UPNP=0 DEBUGFLAGS="-frandom-seed=bitcoin"
+  make -f makefile.linux-mingw $MAKEOPTS DEPSDIR=$HOME/build PLM.exe USE_UPNP=0 DEBUGFLAGS="-frandom-seed=bitcoin"
   i586-mingw32msvc-strip qcoind.exe
   mkdir $OUTDIR/daemon
   cp qcoind.exe $OUTDIR/daemon
@@ -69,4 +69,4 @@ script: |
   cp ../../release/* ../release/
   cp ../../src/*.exe .
   makensis ../share/setup.nsi
-  cp ../share/qcoin-*-win32-setup.exe $OUTDIR/
+  cp ../share/PLM-*-win32-setup.exe $OUTDIR/
