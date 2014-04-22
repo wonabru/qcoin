@@ -285,8 +285,6 @@ Clone the git repositories for bitcoin and gitian,
 git clone https://github.com/devrandom/gitian-builder.git
 git clone https://github.com/wonabru/Q
 mv Q/coin .
-mv Q Qgit
-mv qcoin Q
 ```
 
 Setting up gitian images

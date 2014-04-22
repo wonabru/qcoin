@@ -17,8 +17,8 @@ files:
 - "openssl-1.0.1c.tar.gz"
 - "db-4.8.30.NC.tar.gz"
 - "miniupnpc-1.6.tar.gz"
-- "zlib-1.2.6.tar.gz"
-- "libpng-1.5.9.tar.gz"
+- "zlib-1.2.8.tar.gz"
+- "libpng-1.5.18.tar.gz"
 - "qrencode-3.2.0.tar.bz2"
 script: |
   #
@@ -46,13 +46,13 @@ script: |
   cd ..
   mv miniupnpc-1.6 miniupnpc
   #
-  tar xzf zlib-1.2.6.tar.gz
-  cd zlib-1.2.6
+  tar xzf zlib-1.2.8.tar.gz
+  cd zlib-1.2.8
   make -f win32/Makefile.gcc PREFIX=i686-w64-mingw32- $MAKEOPTS
   cd ..
   #
-  tar xzf libpng-1.5.9.tar.gz
-  cd libpng-1.5.9
+  tar xzf libpng-1.5.18.tar.gz
+  cd libpng-1.5.18
   ./configure -disable-shared PREFIX=i686-w64-mingw32-
   make $MAKEOPTS
   cd ..
