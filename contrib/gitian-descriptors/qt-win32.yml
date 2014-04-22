@@ -5,7 +5,7 @@ suites:
 architectures:
 - "amd64"
 packages: 
-- "mingw32"
+- "mingw-w64"
 - "zip"
 - "faketime"
 reference_datetime: "2011-01-30 00:00:00"

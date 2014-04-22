@@ -1,9 +1,8 @@
 ---
-name: "bitcoin"
+name: "PLM"
 suites:
-- "lucid"
+- "precise"
 architectures:
-- "i386"
 - "amd64"
 packages: 
 - "libdb4.8++-dev"
@@ -20,8 +19,8 @@ packages:
 - "libpng12-dev"
 reference_datetime: "2011-01-30 00:00:00"
 remotes:
-- "url": "https://github.com/bitcoin/bitcoin.git"
-  "dir": "bitcoin"
+- "url": "https://github.com/wonabru/qcoin.git"
+  "dir": "qcoin"
 files:
 - "miniupnpc-1.6.tar.gz"
 - "qrencode-3.2.0.tar.bz2"
