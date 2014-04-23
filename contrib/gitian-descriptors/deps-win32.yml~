@@ -8,13 +8,14 @@ packages:
 - "build-essential"
 - "libssl-dev"
 - "libboost-all-dev"
-- "dpkg"
+- "pkg-config"
 - "mingw32"
 - "git-core"
 - "zip"
 - "faketime"
 - "wine"
 - "psmisc"
+- "libpng12-dev"
 reference_datetime: "2011-01-30 00:00:00"
 remotes: []
 files:
