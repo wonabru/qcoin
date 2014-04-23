@@ -31,7 +31,7 @@ script: |
   #
   tar xzf openssl-1.0.1c.tar.gz
   cd openssl-1.0.1c
-  ./Configure --cross-compile-prefix=i686-w64-mingw32- mingw
+  ./Configure --cross-compile-prefix=i586-mingw32msvc- mingw
   make
   cd ..
 
@@ -40,24 +40,24 @@ script: |
   cd miniupnpc-1.6
   sed 's/dllwrap -k --driver-name gcc/$(DLLWRAP) -k --driver-name $(CC)/' -i Makefile.mingw
   sed 's|wingenminiupnpcstrings $< $@|./wingenminiupnpcstrings $< $@|' -i Makefile.mingw
-  make -f Makefile.mingw PREFIX=i686-w64-mingw32-
+  make -f Makefile.mingw PREFIX=i586-mingw32msvc-
   cd ..
   mv miniupnpc-1.6 miniupnpc
   #
   tar xzf zlib-1.2.6.tar.gz
   cd zlib-1.2.6
-  make -f win32/Makefile.gcc PREFIX=i686-w64-mingw32- $MAKEOPTS
+  make -f win32/Makefile.gcc PREFIX=i586-mingw32msvc- $MAKEOPTS
   cd ..
   #
   tar xzf libpng-1.5.9.tar.gz
   cd libpng-1.5.9
-  ./configure -disable-shared PREFIX=i686-w64-mingw32-
+  ./configure -disable-shared PREFIX=i586-mingw32msvc-
   make $MAKEOPTS
   cd ..
   #
   tar xjf qrencode-3.2.0.tar.bz2
   cd qrencode-3.2.0
-  ./configure PREFIX=i686-w64-mingw32-
+  ./configure PREFIX=i586-mingw32msvc-
   make $MAKEOPTS
   cd ..
   #
