@@ -30,6 +30,7 @@ Release Process
  From a directory containing the qcoin source, gitian-builder and gitian.sigs
   
 	sudo apt-get install mingw-w64
+	sudo apt-get install mingw32
 	export SIGNER=(your gitian key, ie bluematt, sipa, etc)
 	export VERSION=0.9.9
 	pushd ./gitian-builder
@@ -40,6 +41,7 @@ Release Process
 	wget 'http://miniupnp.free.fr/files/download.php?file=miniupnpc-1.6.tar.gz' -O miniupnpc-1.6.tar.gz
 	wget 'http://www.openssl.org/source/openssl-1.0.1c.tar.gz'
 	wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
+	wget 'http://cocotron-tools-gpl3.googlecode.com/files/w32api-3.13-mingw32-dev.tar.gz'
 	wget 'http://ftp.simplesystems.org/pub/libpng/png/src/history/zlib/zlib-1.2.6.tar.gz'
 	wget 'http://ftp.simplesystems.org/pub/libpng/png/src/history/libpng15/libpng-1.5.9.tar.gz'
 	wget 'http://fukuchi.org/works/qrencode/qrencode-3.2.0.tar.bz2'
