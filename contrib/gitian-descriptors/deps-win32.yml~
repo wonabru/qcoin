@@ -31,6 +31,9 @@ script: |
   export FAKETIME=$REFERENCE_DATETIME
   export TZ=UTC
   #
+  cp w32api-3.13-mingw32-dev.tar.gz /c/
+  tar xfz w32api-3.13-mingw32-dev.tar.gz
+  #
   tar xzf openssl-1.0.1c.tar.gz
   cd openssl-1.0.1c
   ./Configure --cross-compile-prefix=i586-mingw32msvc- mingw
