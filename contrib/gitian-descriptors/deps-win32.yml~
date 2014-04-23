@@ -8,6 +8,7 @@ packages:
 - "build-essential"
 - "libssl-dev"
 - "libboost-all-dev"
+- "dpkg"
 - "mingw32"
 - "git-core"
 - "zip"
