@@ -32,9 +32,9 @@ script: |
   export FAKETIME=$REFERENCE_DATETIME
   export TZ=UTC
   #
-  cp w32api-3.13-mingw32-dev.tar.gz /usr/local/
+  sudo cp w32api-3.13-mingw32-dev.tar.gz /usr/local/
   cd /sr/local/
-  tar xfz w32api-3.13-mingw32-dev.tar.gz
+  sudo tar xfz w32api-3.13-mingw32-dev.tar.gz
   cd
   #
   tar xzf openssl-1.0.1c.tar.gz
