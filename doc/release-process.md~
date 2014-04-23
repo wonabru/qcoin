@@ -55,6 +55,8 @@ Release Process
 	./bin/gbuild ../qcoin/contrib/gitian-descriptors/deps-win32.yml
 	mv build/out/PLM-deps-0.0.5.zip inputs/
 
+when ask for password just press enter
+
  Build PLM on Linux32, Linux64, and Win32:
   
 	./bin/gbuild --commit PLM=v${VERSION} ../qcoin/contrib/gitian-descriptors/gitian.yml
