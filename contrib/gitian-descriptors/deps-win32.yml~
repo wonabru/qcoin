@@ -9,7 +9,6 @@ packages:
 - "libssl-dev"
 - "libboost-all-dev"
 - "mingw32"
-- "gcc-mingw32"
 - "git-core"
 - "zip"
 - "faketime"
