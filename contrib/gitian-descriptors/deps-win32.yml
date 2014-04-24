@@ -33,7 +33,6 @@ script: |
   export TZ=UTC
   #
   tar xfz w32api-3.13-mingw32-dev.tar.gz
-  cd
   #
   tar xzf openssl-1.0.1c.tar.gz
   cd openssl-1.0.1c
