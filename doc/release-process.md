@@ -29,8 +29,6 @@ Release Process
 
  From a directory containing the qcoin source, gitian-builder and gitian.sigs
   
-	sudo apt-get install mingw-w64
-	sudo apt-get install mingw32
 	export SIGNER=(your gitian key, ie bluematt, sipa, etc)
 	export VERSION=0.9.9
 	pushd ./gitian-builder
@@ -42,8 +40,8 @@ Release Process
 	wget 'http://www.openssl.org/source/openssl-1.0.1c.tar.gz'
 	wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
 	wget 'http://cocotron-tools-gpl3.googlecode.com/files/w32api-3.13-mingw32-dev.tar.gz'
-	wget 'http://ftp.simplesystems.org/pub/libpng/png/src/history/zlib/zlib-1.2.6.tar.gz'
-	wget 'http://ftp.simplesystems.org/pub/libpng/png/src/history/libpng15/libpng-1.5.9.tar.gz'
+	wget 'ftp://ftp.simplesystems.org/pub/libpng/png/src/history/zlib/zlib-1.2.6.tar.gz'
+	wget 'ftp://ftp.simplesystems.org/pub/libpng/png/src/history/libpng15/libpng-1.5.9.tar.gz'
 	wget 'http://fukuchi.org/works/qrencode/qrencode-3.2.0.tar.bz2'
 	wget 'http://downloads.sourceforge.net/project/boost/boost/1.50.0/boost_1_50_0.tar.bz2'
 	wget 'http://download.qt-project.org/archive/qt/4.8/4.8.3/qt-everywhere-opensource-src-4.8.3.tar.gz'
