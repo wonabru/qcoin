@@ -3,14 +3,14 @@ name: "PLM-deps"
 suites:
 - "precise"
 architectures:
-- "amd64"
+- "i386"
 packages:
 - "build-essential"
 - "libssl-dev"
 - "libboost-all-dev"
 - "pkg-config"
 - "mingw-w64"
-- "ia32-libs"
+- "ia32-libs-multiarch"
 - "git-core"
 - "zip"
 - "faketime"
