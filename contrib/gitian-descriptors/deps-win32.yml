@@ -10,6 +10,7 @@ packages:
 - "libboost-all-dev"
 - "pkg-config"
 - "mingw-w64"
+- "ia32-libs"
 - "git-core"
 - "zip"
 - "faketime"
@@ -61,13 +62,14 @@ script: |
   cd miniupnpc-1.6
   sed 's/dllwrap -k --driver-name gcc/$(DLLWRAP) -k --driver-name $(CC)/' -i Makefile.mingw
   sed 's|wingenminiupnpcstrings $< $@|./wingenminiupnpcstrings $< $@|' -i Makefile.mingw
-  make -f Makefile.mingw PREFIX=i686-w64-mingw32- CFLAGS="-I../include -L../lib"
+  make -f Makefile.mingw PREFIX=i686-w64-mingw32- 
+  # CFLAGS="-I../include -L../lib"
   cd ..
   mv miniupnpc-1.6 miniupnpc
   #
   tar xzf db-4.8.30.NC.tar.gz
   cd db-4.8.30.NC/build_unix
-  ../dist/configure --enable-mingw --enable-cxx --host=i686-w64-mingw32 CFLAGS="-I/usr/i686-w64-mingw32/include -I../../include -L../../lib"
+  ../dist/configure --enable-mingw --enable-cxx --host=i686-w64-mingw32 CFLAGS="-I/usr/i686-w64-mingw32/include"
   make $MAKEOPTS
   cd ../..
   #

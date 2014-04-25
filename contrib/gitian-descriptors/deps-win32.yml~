@@ -67,7 +67,7 @@ script: |
   #
   tar xzf db-4.8.30.NC.tar.gz
   cd db-4.8.30.NC/build_unix
-  ../dist/configure --enable-mingw --enable-cxx --host=i686-w64-mingw32 CFLAGS="-I/usr/i686-w64-mingw32/include"
+  ../dist/configure --enable-mingw --enable-cxx --host=i686-w64-mingw32 CFLAGS="-I/usr/i686-w64-mingw32/include -I../../include -L../../lib"
   make $MAKEOPTS
   cd ../..
   #
