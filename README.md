@@ -141,6 +141,34 @@ Building
 	qtcreator Q-qt.pro
 	[Build -> Rebuild All]
 
+Running program
+-----
+
+Goto catalog qcoin/Release_64/ or qcoin/Release_32/
+or qcoin/Debug_64/ or qcoin/Debug_32/
+
+	./PLM
+
+Recovering wallet
+-----
+
+If for longer time nothing happens kill process ./PLM
+Goto catalog qcoin/Release_64/ or qcoin/Release_32/
+or qcoin/Debug_64/ or qcoin/Debug_32/
+
+	./restart.sh
+
+In ~/.PLMBackup is backup your waller myq.dat
+
+If it appears error: 'Salvage fails' do not panic just do:
+Find your walllet myq.dat it should be in ~/.PLMBackup or in ~/.PLM/wallet.*.bak then to recover wallet:
+
+	/usr/local/BerkeleyDB.4.8/bin/db_dump myq.dat > dump.txt
+	/usr/local/BerkeleyDB.4.8/bin/db_load myqload.dat < dump.txt
+	mkdir backup
+	cp -rf myq.dat backup/
+	cp -rf myqload.dat myq.dat
+	./PLM -afterremoveblocks=1	
 
 Gittian Build (Windows, Linux and OSX installers building)
 -----
