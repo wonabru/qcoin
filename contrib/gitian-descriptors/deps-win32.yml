@@ -5,11 +5,8 @@ suites:
 architectures:
 - "i386"
 packages:
-- "build-essential"
-- "libssl-dev"
-- "libboost-all-dev"
 - "pkg-config"
-- "ia32-libs-multiarch"
+- "mingw32"
 - "git-core"
 - "zip"
 - "faketime"
@@ -19,7 +16,6 @@ packages:
 reference_datetime: "2011-01-30 00:00:00"
 remotes: []
 files:
-- "w32api-3.13-mingw32-dev.tar.gz"
 - "openssl-1.0.1c.tar.gz"
 - "zlib-1.2.6.tar.gz"
 - "libpng-1.5.9.tar.gz"
@@ -31,8 +27,6 @@ script: |
   export LD_PRELOAD=/usr/lib/faketime/libfaketime.so.1
   export FAKETIME=$REFERENCE_DATETIME
   export TZ=UTC
-  #
-  tar xfz w32api-3.13-mingw32-dev.tar.gz
   #
   tar xzf openssl-1.0.1c.tar.gz
   cd openssl-1.0.1c
