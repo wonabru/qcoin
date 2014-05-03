@@ -57,8 +57,7 @@ script: |
   cd miniupnpc-1.6
   sed 's/dllwrap -k --driver-name gcc/$(DLLWRAP) -k --driver-name $(CC)/' -i Makefile.mingw
   sed 's|wingenminiupnpcstrings $< $@|./wingenminiupnpcstrings $< $@|' -i Makefile.mingw
-  make -f Makefile.mingw PREFIX=i686-w64-mingw32- 
-  # CFLAGS="-I../include -L../lib"
+  make -f Makefile.mingw PREFIX=i686-w64-mingw32- CFLAGS="-I/usr/i686-w64-mingw32/include -L/usr/i686-w64-mingw32/lib"
   cd ..
   mv miniupnpc-1.6 miniupnpc
   #

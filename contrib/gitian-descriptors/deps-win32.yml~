@@ -6,6 +6,7 @@ architectures:
 - "i386"
 packages:
 - "pkg-config"
+- "mingw-w64"
 - "mingw-w64-dev"
 - "mingw-w64-tools"
 - "git-core"
