@@ -9,6 +9,8 @@ packages:
 - "mingw-w64"
 - "mingw-w64-dev"
 - "mingw-w64-tools"
+- "gcc-mingw-w64-base"
+- "gcc-mingw-w64-i686"
 - "git-core"
 - "zip"
 - "faketime"
@@ -58,7 +60,6 @@ script: |
   sed 's/dllwrap -k --driver-name gcc/$(DLLWRAP) -k --driver-name $(CC)/' -i Makefile.mingw
   sed 's|wingenminiupnpcstrings $< $@|./wingenminiupnpcstrings $< $@|' -i Makefile.mingw
   make -f Makefile.mingw PREFIX=i686-w64-mingw32- 
-  # CFLAGS="-I../include -L../lib"
   cd ..
   mv miniupnpc-1.6 miniupnpc
   #

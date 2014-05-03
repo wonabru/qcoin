@@ -9,6 +9,8 @@ packages:
 - "mingw-w64"
 - "mingw-w64-dev"
 - "mingw-w64-tools"
+- "gcc-mingw-w64-base"
+- "gcc-mingw-w64-i686"
 - "git-core"
 - "zip"
 - "faketime"
@@ -57,13 +59,13 @@ script: |
   cd miniupnpc-1.6
   sed 's/dllwrap -k --driver-name gcc/$(DLLWRAP) -k --driver-name $(CC)/' -i Makefile.mingw
   sed 's|wingenminiupnpcstrings $< $@|./wingenminiupnpcstrings $< $@|' -i Makefile.mingw
-  make -f Makefile.mingw PREFIX=i686-w64-mingw32- CFLAGS="-I/usr/i686-w64-mingw32/include -L/usr/i686-w64-mingw32/lib"
+  make -f Makefile.mingw PREFIX=i686-w64-mingw32- 
   cd ..
   mv miniupnpc-1.6 miniupnpc
   #
   tar xzf db-4.8.30.NC.tar.gz
   cd db-4.8.30.NC/build_unix
-  ../dist/configure --enable-mingw --enable-cxx --host=i686-w64-mingw32 CFLAGS="-I/usr/i686-w64-mingw32/include"
+  ../dist/configure --enable-mingw --enable-cxx --host=i686-w64-mingw32  
   make $MAKEOPTS
   cd ../..
   #
