@@ -45,6 +45,8 @@ Release Process
 	wget 'http://fukuchi.org/works/qrencode/qrencode-3.2.0.tar.bz2'
 	wget 'http://downloads.sourceforge.net/project/boost/boost/1.50.0/boost_1_50_0.tar.bz2'
 	wget 'http://download.qt-project.org/archive/qt/4.8/4.8.3/qt-everywhere-opensource-src-4.8.3.tar.gz'
+	wget http://sourceforge.net/projects/mingw-w64/files/Toolchain%20sources/Automated%20Builds/mingw-w64-src_20140501.tar.bz2/download
+
 	cd ..
 	./bin/gbuild ../qcoin/contrib/gitian-descriptors/boost-win32.yml
 	mv build/out/boost-win32-1.50.0-gitian2.zip inputs/

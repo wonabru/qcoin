@@ -6,7 +6,8 @@ architectures:
 - "i386"
 packages:
 - "pkg-config"
-- "mingw32"
+- "mingw-w64-dev"
+- "mingw-w64-tools"
 - "git-core"
 - "zip"
 - "faketime"
