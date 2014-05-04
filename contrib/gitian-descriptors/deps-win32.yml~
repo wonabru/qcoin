@@ -7,11 +7,6 @@ architectures:
 packages:
 - "pkg-config"
 - "mingw-w64"
-- "mingw-w64-dev"
-- "mingw-w64-tools"
-- "gcc-mingw-w64-base"
-- "gcc-mingw-w64-i686"
-- "mysql-server"
 - "git-core"
 - "zip"
 - "faketime"
@@ -59,7 +54,6 @@ script: |
   tar xzf db-4.8.30.NC.tar.gz
   cd db-4.8.30.NC/build_unix
   ../dist/configure --disable-replication --enable-mingw --enable-cxx --host=i686-w64-mingw32 
-  replace pthread_t u_int32_t - db.h  
   make $MAKEOPTS
   cd ../..
   #

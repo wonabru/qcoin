@@ -7,11 +7,6 @@ architectures:
 packages:
 - "pkg-config"
 - "mingw-w64"
-- "mingw-w64-dev"
-- "mingw-w64-tools"
-- "gcc-mingw-w64-base"
-- "gcc-mingw-w64-i686"
-- "mysql-client"
 - "git-core"
 - "zip"
 - "faketime"
@@ -59,14 +54,12 @@ script: |
   tar xzf db-4.8.30.NC.tar.gz
   cd db-4.8.30.NC/build_unix
   ../dist/configure --disable-replication --enable-mingw --enable-cxx --host=i686-w64-mingw32 
-  replace pthread_t u_int32_t - db.h  
   make $MAKEOPTS
   cd ../..
   #
   zip -r $OUTDIR/PLM-deps-0.0.5.zip \
     $(ls qrencode-*/{qrencode.h,.libs/libqrencode.{,l}a} | sort) \
     $(ls db-*/build_unix/{libdb_cxx.a,db.h,db_cxx.h,libdb.a,.libs/libdb_cxx-?.?.a} | sort) \
-    $(find openssl-* -name '*.a' -o -name '*.h' | sort) \
-    $(find miniupnpc -name '*.h' -o -name 'libminiupnpc.a' | sort)
+    $(find openssl-* -name '*.a' -o -name '*.h' | sort) 
   # Kill wine processes as gitian won't figure out we are done otherwise
   killall wineserver services.exe explorer.exe winedevice.exe
