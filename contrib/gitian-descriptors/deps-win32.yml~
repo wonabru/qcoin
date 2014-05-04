@@ -60,7 +60,6 @@ script: |
   zip -r $OUTDIR/PLM-deps-0.0.5.zip \
     $(ls qrencode-*/{qrencode.h,.libs/libqrencode.{,l}a} | sort) \
     $(ls db-*/build_unix/{libdb_cxx.a,db.h,db_cxx.h,libdb.a,.libs/libdb_cxx-?.?.a} | sort) \
-    $(find openssl-* -name '*.a' -o -name '*.h' | sort) \
-    $(find miniupnpc -name '*.h' -o -name 'libminiupnpc.a' | sort)
+    $(find openssl-* -name '*.a' -o -name '*.h' | sort) 
   # Kill wine processes as gitian won't figure out we are done otherwise
   killall wineserver services.exe explorer.exe winedevice.exe
