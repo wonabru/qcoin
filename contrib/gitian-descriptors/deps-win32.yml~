@@ -11,6 +11,7 @@ packages:
 - "mingw-w64-tools"
 - "gcc-mingw-w64-base"
 - "gcc-mingw-w64-i686"
+- "mysql-server"
 - "git-core"
 - "zip"
 - "faketime"
