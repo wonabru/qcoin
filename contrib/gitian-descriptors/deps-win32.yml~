@@ -55,17 +55,10 @@ script: |
   make $MAKEOPTS
   cd ..
   #
- # tar xzf miniupnpc-1.6.tar.gz
- # cd miniupnpc-1.6
- # sed 's/dllwrap -k --driver-name gcc/$(DLLWRAP) -k --driver-name $(CC)/' -i Makefile.mingw
- # sed 's|wingenminiupnpcstrings $< $@|./wingenminiupnpcstrings $< $@|' -i Makefile.mingw
- # make -f Makefile.mingw 
- # cd ..
- # mv miniupnpc-1.6 miniupnpc
-  #
   tar xzf db-4.8.30.NC.tar.gz
   cd db-4.8.30.NC/build_unix
-  ../dist/configure --enable-mingw --enable-cxx --host=i686-w64-mingw32  
+  ../dist/configure --disable-replication --enable-mingw --enable-cxx --host=i686-w64-mingw32 
+  replace pthread_t u_int32_t - db.h  
   make $MAKEOPTS
   cd ../..
   #
