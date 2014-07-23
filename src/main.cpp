@@ -41,7 +41,7 @@ extern Value addnode(const Array& params, bool fHelp);
 //
 CCriticalSection cs_setpwalletRegistered;
 set<CWallet*> setpwalletRegistered;
-
+CCriticalSection cs_progressBlock;
 CCriticalSection cs_main;
 CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
@@ -51,6 +51,8 @@ std::string efff = "00000000000000000000000001ffffff";
 std::string efff1152 = "00000000000000000000000003fffffe";
 std::string ffff2304 = "000000000000000001ffffff00000000";
 std::string ffff3456 = "00000000000000000000000000ffffff";
+std::string ffff4608 = "00000000000000000000000001000001";
+std::string ffff5760 = "00000000000000000000000000ffffff";
 uint256 hashGenesisBlock("0x38ada30de2bc54fe375abc7d0930051341f33ad87e20f86bc93844a7f3300513");
 static CBigNum bnProofOfWorkLimit = 0xffffffffffffffff;
 CBlockIndex* pindexGenesisBlock = NULL;
@@ -1204,6 +1206,14 @@ uint128 static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHe
     {
         bnNew.SetCompact((uint128)ffff3456.c_str());
         return bnNew.GetCompact();
+    }else if(pindexLast->nHeight == 4607)
+    {
+        bnNew.SetCompact((uint128)ffff4608.c_str());
+        return bnNew.GetCompact();
+    }else if(pindexLast->nHeight == 5759)
+    {
+        bnNew.SetCompact((uint128)ffff5760.c_str());
+        return bnNew.GetCompact();
     }
     // Limit adjustment step
     int64 nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
@@ -1214,11 +1224,12 @@ uint128 static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHe
         if(nActualTimespan < nTargetTimespan/4)
         {
             nActualTimespan = nTargetTimespan/4;
-            currentWork >> 2;
+            currentWork = currentWork >> 1;
+            currentWork = currentWork >> 1;
 
         }else{
             nActualTimespan = nTargetTimespan/2;
-            currentWork >> 1;
+            currentWork = currentWork >> 1;
 
         }
     }else
@@ -1227,11 +1238,12 @@ uint128 static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHe
         if (nActualTimespan > nTargetTimespan*4)
         {
             nActualTimespan = nTargetTimespan*4;
-            currentWork << 2;
+            currentWork = currentWork << 1;
+            currentWork = currentWork << 1;
             currentWork = currentWork + 2;
         }else{
             nActualTimespan = nTargetTimespan*2;
-            currentWork << 1;
+            currentWork = currentWork << 1;
             currentWork = currentWork + 1;
         }
     }else{
@@ -2343,7 +2355,7 @@ void reconnection()
 
 int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBlockPos *dbp)
 {
-   // printf("8ProcessBlock: ACCEPTED\n Adding new information to PLM-network\n");
+   // printf("ProcessBlock: ACCEPTED\n Adding new information to PLM-network\n");
 
     CKeyID key = (CKeyID)(pblock->namePubKey);
     CQcoinAddress address;
@@ -2361,20 +2373,22 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
     std::string names = printNamesInQNetwork();
   //  printf("9 %s\n New name accepted\n",names.c_str());
     vector<CTransaction> tx = pblock->vtx;
-
+    int noVtx = 0;
     BOOST_FOREACH(const CTransaction& vtx, tx)
     {
-        BOOST_FOREACH(const CTxOut &vout, vtx.vout)
+        if(noVtx++ == 0)
         {
-            if(isNameInQNetwork(vout.scriptPubKey))
+            BOOST_FOREACH(const CTxOut &vout, vtx.vout)
             {
-                if(CQcoinAddress(vout.scriptPubKey.GetKeyID()).ToString() != address.ToString())
-                    ret = 2;
+                if(isNameInQNetwork(vout.scriptPubKey))
+                {
+                    if(CQcoinAddress(vout.scriptPubKey.GetKeyID()).ToString() != address.ToString())
+                        ret = 2;
+                }
+                if(vout.nValue != COIN)
+                    ret = 3;
             }
-            if(vout.nValue != COIN)
-               ret = 3;
         }
-
         bool isOK = false;
         if(vtx.vchn.size() > 0)
         {
@@ -2436,7 +2450,9 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
 bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBlockPos *dbp)
 {
     // Check for duplicate
-  //  printf("2\n");
+    printf("ProcessBlock\n");
+    {
+        LOCK(cs_progressBlock);
     uint256 hash = pblock->GetHash();
     if(synchronizingComplete == true)
     {
@@ -2523,6 +2539,7 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
     std::map<CTxDestination, std::string>::iterator mi2 = pwalletMain->mapAddressBook.find(addr.Get());
     pwalletMain->NotifyAddressBookChanged(pwalletMain, addr.Get(), pblock->GetBlockName(), ::IsMine(*pwalletMain, addr.Get()), (mi2 == pwalletMain->mapAddressBook.end()) ? CT_NEW : CT_UPDATED);
  //   printf("20\n");
+    }
     return true;
 }
 

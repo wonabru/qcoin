@@ -798,6 +798,7 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
     if(pindexStart == pindexGenesisBlock)
     {
         this->eraseNameBookRegistered();
+        this->eraseAddressBook();
     }
     CBlockIndex* pindex = pindexStart;
     {
@@ -812,8 +813,17 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
                 {
                     LOCK(cs_main);
                     CValidationState state;
-                    if(acceptNameInQNetwork(state, NULL, &block) > 0)
-                        throw "Blocks are orphaned. No way to proceed";
+                    int ret = acceptNameInQNetwork(state, NULL, &block, NULL);
+                    if(ret == 1)
+                        error("ProcessBlock() : AcceptBlock FAILED. The block name exists in network");
+                    if(ret == 2)
+                        error("ProcessBlock() : AcceptBlock FAILED. Payout is not to accounts in network");
+                    if(ret == 3)
+                        error("ProcessBlock() : AcceptBlock FAILED. Payout is not equal one Mark");
+                    if(ret > 3)
+                        error("ProcessBlock() : AcceptBlock FAILED. Unknown error");
+                    if(ret != 0)
+                        throw "ERROR: Read block.";
                     if (state.IsError())
                         throw "Error in block process!";
                 }
@@ -1766,6 +1776,24 @@ bool CWallet::eraseName(const CTxDestination& address)
     return true;
 }
 
+bool CWallet::eraseAddress(const CTxDestination& address)
+{
+    if (!fFileBacked)
+        return false;
+    {
+                  LOCK(this->cs_wallet);
+
+
+
+    std::map<CTxDestination, std::string>::iterator mi = mapAddressBook.find(address);
+    if((mi == mapAddressBook.end() ? CT_NEW : CT_UPDATED) == CT_UPDATED)
+    {
+        DelAddressBookName(address);
+    }
+    }
+    return true;
+}
+
 bool CWallet::eraseNameOnly(const std::string& name)
 {
     if (!fFileBacked)
@@ -1815,6 +1843,23 @@ bool CWallet::eraseNameBookRegistered()
     {
         std::map<std::string, bool>::iterator mi = mapNamesOnly.begin();
         eraseNameOnly((*mi).first);
+    }
+    }
+    return true;
+}
+
+bool CWallet::eraseAddressBook()
+{
+    if (!fFileBacked)
+        return false;
+    {
+                  LOCK(this->cs_wallet);
+
+
+    while(mapAddressBook.size() > 0)
+    {
+        std::map<CTxDestination, std::string>::iterator mi = mapAddressBook.begin();
+        eraseAddress((*mi).first);
     }
     }
     return true;
