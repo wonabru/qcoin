@@ -1,4 +1,5 @@
-name: "PLM"
+---
+name: "qcoin"
 suites:
 - "precise"
 architectures:
