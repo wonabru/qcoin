@@ -1,9 +1,8 @@
 ---
-name: "bitcoin"
+name: "PLM"
 suites:
-- "lucid"
+- "precise"
 architectures:
-- "i386"
 - "amd64"
 packages:
 - "libdb4.8++-dev"
@@ -18,10 +17,11 @@ packages:
 - "unzip"
 - "pkg-config"
 - "libpng12-dev"
-reference_datetime: "2011-01-30 00:00:00"
+reference_datetime: "2014-07-30 00:00:00"
 remotes:
-- "url": "https://github.com/bitcoin/bitcoin.git"
-  "dir": "bitcoin"
+- "url": "https://github.com/wonabru/qcoin.git"
+  "commit": "qcoin"
+  "dir": "qcoin"
 files:
 - "miniupnpc-1.6.tar.gz"
 - "qrencode-3.2.0.tar.bz2"
@@ -46,10 +46,10 @@ script: |
   cp $OUTDIR/src/doc/README.md $OUTDIR
   cp $OUTDIR/src/COPYING $OUTDIR
   cd src
-  make -f makefile.unix STATIC=1 OPENSSL_INCLUDE_PATH="$INSTDIR/include" OPENSSL_LIB_PATH="$INSTDIR/lib" $MAKEOPTS bitcoind USE_UPNP=0 DEBUGFLAGS=
-  mkdir -p $OUTDIR/bin/$GBUILD_BITS
-  install -s bitcoind $OUTDIR/bin/$GBUILD_BITS
+  #make -f makefile.unix STATIC=1 OPENSSL_INCLUDE_PATH="$INSTDIR/include" OPENSSL_LIB_PATH="$INSTDIR/lib" $MAKEOPTS bitcoind USE_UPNP=0 DEBUGFLAGS=
+  #mkdir -p $OUTDIR/bin/$GBUILD_BITS
+  #install -s bitcoind $OUTDIR/bin/$GBUILD_BITS
   cd ..
   qmake INCLUDEPATH="$INSTDIR/include" LIBS="-L$INSTDIR/lib" RELEASE=1 USE_QRCODE=1
   make $MAKEOPTS
-  install bitcoin-qt $OUTDIR/bin/$GBUILD_BITS
+  install PLM $OUTDIR/bin/$GBUILD_BITS
