@@ -62,6 +62,6 @@ script: |
   #mkdir -p $OUTDIR/bin/$GBUILD_BITS
   #install -s bitcoind $OUTDIR/bin/$GBUILD_BITS
   cd ..
-  qmake INCLUDEPATH="$INSTDIR/include $HOME/BerkeleyDB.4.8/include" LIBS="-L$INSTDIR/lib -L$HOME/BerkeleyDB.4.8/lib" RELEASE=1 USE_QRCODE=1
+  qmake INCLUDEPATH="$INSTDIR/include" INCLUDEPATH+="$HOME/BerkeleyDB.4.8/include" LIBS="-L$INSTDIR/lib" LIBS+="-L$HOME/BerkeleyDB.4.8/lib" RELEASE=1 USE_QRCODE=1
   make $MAKEOPTS
   install PLM $OUTDIR/bin/$GBUILD_BITS
