@@ -28,7 +28,7 @@ files:
 script: |
   tar xfz db-4.8.30.NC.tar.gz
   cd db-4.8.30.NC/build_unix
-  ../dist/configure --enable-cxx CPPFLAGS="-I$HOME/BerkeleyDB.4.8/include" LDFLAGS="-L$HOME/BerkeleyDB.4.8/lib"
+  ../dist/configure --enable-cxx --prefix="$HOME"
   make
   export BDB_INCLUDE_PATH="$HOME/BerkeleyDB.4.8/include"
   export BDB_LIB_PATH="$HOME/BerkeleyDB.4.8/lib"
