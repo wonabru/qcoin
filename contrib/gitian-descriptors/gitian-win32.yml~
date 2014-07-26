@@ -17,7 +17,7 @@ files:
 - "qt-win32-4.8.3-gitian-r1.zip"
 - "boost-win32-1.50.0-gitian2.zip"
 - "PLM-deps-0.0.5.zip"
-- "PLM.zip"
+- "PLM-0.9.9-linux-gitian.zip"
 script: |
   #
   mkdir $HOME/qt
@@ -39,13 +39,13 @@ script: |
   mv include/boost .
   cd ..
   #
-  unzip PLM.zip
+  unzip PLM-0.9.9-linux-gitian.zip
   #
   find -type f | xargs touch --date="$REFERENCE_DATETIME"
   #
-  cp -r qcoin $OUTDIR/src
-  cp -r qcoin nsis
-  cd qcoin
+  cp -r src $OUTDIR/src
+  cp -r src nsis
+  cd src
   cp $OUTDIR/src/doc/README_windows.txt $OUTDIR/readme.txt
   cp $OUTDIR/src/COPYING $OUTDIR/COPYING.txt
   export LD_PRELOAD=/usr/lib/faketime/libfaketime.so.1
