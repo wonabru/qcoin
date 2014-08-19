@@ -39,7 +39,7 @@ script: |
   done
   cd ../..
   mv include/boost .
-  cp boost ../
+  cp ./boost ../.
   ls
   cd ..
   #
