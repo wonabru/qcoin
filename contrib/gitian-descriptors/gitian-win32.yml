@@ -38,7 +38,6 @@ script: |
     i586-mingw32msvc-ranlib ../../stage/lib/libboost_${lib}-mt-s.a
   done
   cd ../..
-  mv include/boost .
   cd ..
   #
   unzip PLM-0.9.9-linux-gitian.zip
