@@ -26,10 +26,7 @@ script: |
   cd $HOME/build/
   export PATH=$HOME/qt/bin/:$PATH
   #
-  mkdir $HOME/deps
-  cd $HOME/deps
-  unzip ../build/PLM-deps-0.0.5.zip
-  cd $HOME/build/
+  unzip PLM-deps-0.0.5.zip
   #
   mkdir boost_1_50_0
   cd boost_1_50_0
