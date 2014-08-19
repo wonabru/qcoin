@@ -10,7 +10,6 @@ packages:
 - "unzip"
 - "nsis"
 - "faketime"
-- "libssl-dev"
 
 reference_datetime: "2014-07-30 00:00:00"
 remotes: []
@@ -26,6 +25,11 @@ script: |
   unzip ../build/qt-win32-4.8.3-gitian-r1.zip
   cd $HOME/build/
   export PATH=$HOME/qt/bin/:$PATH
+  #
+  mkdir $HOME/deps
+  cd $HOME/deps
+  unzip ../build/PLM-deps-0.0.5.zip
+  cd $HOME/build/
   #
   mkdir boost_1_50_0
   cd boost_1_50_0
