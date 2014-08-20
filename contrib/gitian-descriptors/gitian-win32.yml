@@ -38,8 +38,8 @@ script: |
     i586-mingw32msvc-ranlib ../../stage/lib/libboost_${lib}-mt-s.a
   done
   cd ../..
-  mv include/boost .
-  cp ./boost ../.
+  cp include/boost .
+  cp include/boost ../.
   cd ..
   ls
   #

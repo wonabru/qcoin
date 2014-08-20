@@ -40,8 +40,8 @@ script: |
   cd ../..
   mv include/boost .
   cp ./boost ../.
-  ls
   cd ..
+  ls
   #
   unzip PLM-0.9.9-linux-gitian.zip
   #
