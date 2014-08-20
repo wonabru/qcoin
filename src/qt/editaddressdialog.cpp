@@ -6,7 +6,7 @@
 #include "guiutil.h"
 #include "main.h"
 #include "base58.h"
-#include "boost/thread.hpp"
+#include "util.h"
 
 #include <QDataWidgetMapper>
 #include <QMessageBox>
