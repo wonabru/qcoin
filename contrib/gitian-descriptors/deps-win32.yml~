@@ -3,10 +3,11 @@ name: "PLM-deps"
 suites:
 - "precise"
 architectures:
-- "i386"
+- "amd64"
 packages:
 - "pkg-config"
-- "mingw32"
+- "mingw-w64"
+- "g++-mingw-w64"
 - "git-core"
 - "zip"
 - "faketime"
@@ -37,6 +38,11 @@ script: |
   tar xzf zlib-1.2.6.tar.gz
   cd zlib-1.2.6
   make -f win32/Makefile.gcc PREFIX=i686-w64-mingw32- $MAKEOPTS
+  cd ..
+  #
+  tar -xzf miniupnpc-1.6.tar.gz
+  cd miniupnpc-1.6
+  make -f Makefile.mingw PREFIX=i686-w64-mingw32-
   cd ..
   #
   tar xzf libpng-1.5.9.tar.gz
