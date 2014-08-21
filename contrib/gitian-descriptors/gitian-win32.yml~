@@ -44,7 +44,7 @@ script: |
   done
   cd ../..
   cp -rf include/boost .
-  cp -rf include/boost ../
+  cp -rf boost ../
   cd ..
   ls
   #
