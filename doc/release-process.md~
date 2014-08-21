@@ -58,7 +58,7 @@ One have to change Makefile.mingw for miniupnpc
 	CC = gcc
 
 	replace with:
-	CC = $(PREFIX)gcc
+	CC = i686-w64-mingw32-gcc
 
 	save.
 	cc ..
