@@ -58,7 +58,13 @@ One have to change Makefile.mingw for miniupnpc
 	CC = gcc
 
 	replace with:
-	CC = i686-w64-mingw32-gcc
+	CC = i586-mingw32msvc-gcc
+
+	find:
+	wingenminiupnpcstrings $< $@
+
+	replace with:
+	./wingenminiupnpcstrings $< $@
 
 	save.
 	cc ..

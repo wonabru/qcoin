@@ -67,9 +67,9 @@ One have to change Makefile.mingw for miniupnpc
 	./wingenminiupnpcstrings $< $@
 
 	save.
-	cc ..
+	cd ..
 	rm -rf miniupnpc-1.6.tar.gz
-	tar xfc miniupnpc-1.6.tar.gz miniupnpc-1.6
+	tar zfc miniupnpc-1.6.tar.gz miniupnpc-1.6
 	cd ..
 
 	cd ..
