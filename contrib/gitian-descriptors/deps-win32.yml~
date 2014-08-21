@@ -42,7 +42,7 @@ script: |
   #
   tar -xzf miniupnpc-1.6.tar.gz
   cd miniupnpc-1.6
-  make -f Makefile.mingw PREFIX=i686-w64-mingw32- $MAKEOPTS
+  mingw32-make -f Makefile.mingw init upnpc-static
   cd ..
   #
   tar xzf libpng-1.5.9.tar.gz
