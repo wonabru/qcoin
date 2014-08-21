@@ -24,7 +24,12 @@ files:
 - "PLM-deps-0.0.5.zip"
 - "PLM-0.9.9-linux-gitian.zip"
 - "miniupnpc-1.6.tar.gz"
-script: |
+script: 
+  #
+  tar -xzf miniupnpc-1.6.tar.gz
+  cd miniupnpc-1.6
+  make -f Makefile.mingw PREFIX=i686-w64-mingw32-
+  cd ..|
   #
   mkdir $HOME/qt
   cd $HOME/qt
