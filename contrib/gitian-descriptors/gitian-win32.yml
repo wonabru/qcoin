@@ -75,9 +75,6 @@ script:
   export FAKETIME=$REFERENCE_DATETIME
   export TZ=UTC
   make -f makefile.linux-mingw $MAKEOPTS DEPSDIR=$HOME/build PLM.exe USE_UPNP=0 DEBUGFLAGS="-frandom-seed=bitcoin"
-  #i586-mingw32msvc-strip qcoind.exe
-  #mkdir $OUTDIR/daemon
-  #cp qcoind.exe $OUTDIR/daemon
   cd ..
   mkdir nsis
   mv ../nsis
