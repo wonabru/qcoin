@@ -11,6 +11,10 @@ packages:
 - "nsis"
 - "faketime"
 - "libminiupnpc-dev"
+- "pkg-config"
+- "wine"
+- "psmisc"
+- "libpng12-dev"
 
 reference_datetime: "2014-07-30 00:00:00"
 remotes: []
@@ -19,7 +23,13 @@ files:
 - "boost-win32-1.50.0-gitian2.zip"
 - "PLM-deps-0.0.5.zip"
 - "PLM-0.9.9-linux-gitian.zip"
-script: |
+- "miniupnpc-1.6.tar.gz"
+script: 
+  #
+  tar -xzf miniupnpc-1.6.tar.gz
+  cd miniupnpc-1.6
+  make -f Makefile.mingw PREFIX=i686-w64-mingw32-
+  cd ..|
   #
   mkdir $HOME/qt
   cd $HOME/qt
