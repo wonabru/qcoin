@@ -6,8 +6,7 @@ architectures:
 - "amd64"
 packages:
 - "pkg-config"
-- "mingw-w64"
-- "g++-mingw-w64"
+- "mingw32"
 - "git-core"
 - "zip"
 - "faketime"
