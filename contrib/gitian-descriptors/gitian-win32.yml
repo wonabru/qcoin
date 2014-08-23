@@ -70,8 +70,7 @@ script: |
   #make -f makefile.linux-mingw $MAKEOPTS DEPSDIR=$HOME/build PLMd.exe USE_UPNP=0 DEBUGFLAGS="-frandom-seed=bitcoin"
   cd ..
   mkdir nsis
-  git archive HEAD | tar -x -C nsis
-  cd nsis/src
+  mv src nsis
   mkdir ../release
   cp ../../release/* ../release/
   cp ../../src/*.exe .
