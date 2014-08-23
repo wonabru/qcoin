@@ -28,12 +28,6 @@ script: |
   export FAKETIME=$REFERENCE_DATETIME
   export TZ=UTC
   #
-  tar xzf openssl-1.0.1c.tar.gz
-  cd openssl-1.0.1c
-  ./Configure --cross-compile-prefix=i686-w64-mingw32- mingw
-  make
-  cd ..
-  #
   tar xzf zlib-1.2.6.tar.gz
   cd zlib-1.2.6
   make -f win32/Makefile.gcc PREFIX=i686-w64-mingw32- $MAKEOPTS
