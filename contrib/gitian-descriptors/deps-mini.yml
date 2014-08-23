@@ -19,6 +19,7 @@ remotes: []
 files:
 - "miniupnpc-1.6.tar.gz"
 - "openssl-1.0.1c.tar.gz"
+- "qrencode-3.2.0.tar.bz2"
 script: |
   #
   tar -xzf miniupnpc-1.6.tar.gz
@@ -32,5 +33,11 @@ script: |
   make
   cd ..
   #
-  zip -r $OUTDIR/mini-deps-0.0.5.zip miniupnpc-1.6 openssl-1.0.1c
+  tar xjf qrencode-3.2.0.tar.bz2
+  cd qrencode-3.2.0
+  ./configure PREFIX=i586-mingw32msvc-
+  make $MAKEOPTS
+  cd ..
+  #
+  zip -r $OUTDIR/mini-deps-0.0.5.zip miniupnpc-1.6 openssl-1.0.1c qrencode-3.2.0
     
