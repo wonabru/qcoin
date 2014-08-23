@@ -70,7 +70,8 @@ script: |
   #make -f makefile.linux-mingw $MAKEOPTS DEPSDIR=$HOME/build PLMd.exe USE_UPNP=0 DEBUGFLAGS="-frandom-seed=bitcoin"
   cd ..
   mkdir nsis
-  mv src nsis
+  cp -rf src nsis
+  cd nsis
   mkdir ../release
   cp ../../release/* ../release/
   cp ../../src/*.exe .
