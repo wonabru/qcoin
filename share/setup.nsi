@@ -75,7 +75,7 @@ Section -Main SEC0000
     WriteRegStr HKCU "${REGKEY}\Components" Main 1
 
     # Remove old wxwidgets-based-qcoin executable and locales:
-    Delete /REBOOTOK $INSTDIR\PLM.exe
+    #Delete /REBOOTOK $INSTDIR\PLM.exe
     RMDir /r /REBOOTOK $INSTDIR\locale
 SectionEnd
 
