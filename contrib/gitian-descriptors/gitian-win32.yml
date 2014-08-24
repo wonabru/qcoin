@@ -17,9 +17,9 @@ remotes:
 files:
 - "PLM-0.9.9-linux-gitian.zip"
 script: |
+  unzip PLM-0.9.9-linux-gitian.zip
   mkdir release
   touch release/PLM.exe
-  unzip PLM-0.9.9-linux-gitian.zip
   cd src
   #
   cd src
