@@ -970,7 +970,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     {
         pwalletMain->eraseNameBookRegistered();
         pwalletMain->eraseAddressBook();
-        printf("-afterremoveblocks=true");
+        logPrint("-afterremoveblocks=true");
     }
 
     bool fLoaded = false;
@@ -1197,7 +1197,7 @@ bool AppInit2(boost::thread_group& threadGroup)
 
     while(clientModel.getNumBlocks() < clientModel.getNumBlocksOfPeers() - 10)
     {
-        printf("%d < %d\n",clientModel.getNumBlocks(),clientModel.getNumBlocksOfPeers());
+        logPrint("%d < %d\n",clientModel.getNumBlocks(),clientModel.getNumBlocksOfPeers());
         sleep(10);
     }
 
