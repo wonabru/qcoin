@@ -13,7 +13,10 @@ packages:
 - "libminiupnpc-dev"
 - "libboost-all-dev"
 reference_datetime: "2014-07-30 00:00:00"
-remotes: []
+remotes:
+- "url": "https://github.com/wonabru/qcoin.git"
+  "commit": "master"
+  "dir": "qcoin"
 files:
 - "qt-win32-4.8.3-gitian-r1.zip"
 - "boost-win32-1.50.0-gitian2.zip"
@@ -70,10 +73,12 @@ script: |
   #make -f makefile.linux-mingw $MAKEOPTS DEPSDIR=$HOME/build PLMd.exe USE_UPNP=0 DEBUGFLAGS="-frandom-seed=bitcoin"
   cd ..
   mkdir nsis
-  cp -rf src nsis
-  cd nsis/src
+  cd qcoin
+  git archive HEAD | tar -x -C nsis/src
+  cd ../nsis/src
   mkdir ../release
   cp ../../release/* ../release/
   cp ../../release/*.exe .
-  makensis ../share/setup.nsi
+  cd ../../qcoin
+  makensis share/setup.nsi
   cp ../share/PLM-*-win32-setup.exe $OUTDIR/

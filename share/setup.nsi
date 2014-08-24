@@ -1,16 +1,16 @@
-Name Qcoin
+Name PLM
 
 RequestExecutionLevel highest
 SetCompressor /SOLID lzma
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 0.8.6
-!define COMPANY "Qcoin project"
-!define URL http://www.qcoin.org/
+!define VERSION 0.9.9
+!define COMPANY "PLM project"
+!define URL http://www.q-coin.org/
 
 # MUI Symbol Definitions
-!define MUI_ICON "../share/pixmaps/qcoin.ico"
+!define MUI_ICON "../share/pixmaps/PLM.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "../share/pixmaps/nsis-wizard.bmp"
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
@@ -45,14 +45,14 @@ Var StartMenuGroup
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
-OutFile qcoin-0.8.6-win32-setup.exe
-InstallDir $PROGRAMFILES\Qcoin
+OutFile PLM-0.9.9-win32-setup.exe
+InstallDir $PROGRAMFILES\PLM
 CRCCheck on
 XPStyle on
 BrandingText " "
 ShowInstDetails show
-VIProductVersion 0.8.6.0
-VIAddVersionKey ProductName Qcoin
+VIProductVersion 0.9.9.9
+VIAddVersionKey ProductName PLM
 VIAddVersionKey ProductVersion "${VERSION}"
 VIAddVersionKey CompanyName "${COMPANY}"
 VIAddVersionKey CompanyWebsite "${URL}"
@@ -69,15 +69,13 @@ Section -Main SEC0000
     File ../release/qcoin-qt.exe
     File /oname=COPYING.txt ../COPYING
     File /oname=readme.txt ../doc/README_windows.txt
-    SetOutPath $INSTDIR\daemon
-    File ../src/qcoind.exe
     SetOutPath $INSTDIR\src
     File /r /x *.exe /x *.o ../src\*.*
     SetOutPath $INSTDIR
     WriteRegStr HKCU "${REGKEY}\Components" Main 1
 
     # Remove old wxwidgets-based-qcoin executable and locales:
-    Delete /REBOOTOK $INSTDIR\qcoin.exe
+    Delete /REBOOTOK $INSTDIR\PLM.exe
     RMDir /r /REBOOTOK $INSTDIR\locale
 SectionEnd
 
@@ -87,7 +85,7 @@ Section -post SEC0001
     WriteUninstaller $INSTDIR\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     CreateDirectory $SMPROGRAMS\$StartMenuGroup
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Qcoin.lnk" $INSTDIR\qcoin-qt.exe
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\PLM.lnk" $INSTDIR\PLM.exe
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Uninstall Qcoin.lnk" $INSTDIR\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_END
     WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayName "$(^Name)"
@@ -98,10 +96,10 @@ Section -post SEC0001
     WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" UninstallString $INSTDIR\uninstall.exe
     WriteRegDWORD HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoModify 1
     WriteRegDWORD HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoRepair 1
-    WriteRegStr HKCR "qcoin" "URL Protocol" ""
-    WriteRegStr HKCR "qcoin" "" "URL:Qcoin"
-    WriteRegStr HKCR "qcoin\DefaultIcon" "" $INSTDIR\qcoin-qt.exe
-    WriteRegStr HKCR "qcoin\shell\open\command" "" '"$INSTDIR\qcoin-qt.exe" "%1"'
+    WriteRegStr HKCR "PLM" "URL Protocol" ""
+    WriteRegStr HKCR "PLM" "" "URL:PLM"
+    WriteRegStr HKCR "PLM\DefaultIcon" "" $INSTDIR\PLM.exe
+    WriteRegStr HKCR "PLM\shell\open\command" "" '"$INSTDIR\PLM.exe" "%1"'
 SectionEnd
 
 # Macro for selecting uninstaller sections
@@ -119,19 +117,18 @@ done${UNSECTION_ID}:
 
 # Uninstaller sections
 Section /o -un.Main UNSEC0000
-    Delete /REBOOTOK $INSTDIR\qcoin-qt.exe
+    Delete /REBOOTOK $INSTDIR\PLM.exe
     Delete /REBOOTOK $INSTDIR\COPYING.txt
     Delete /REBOOTOK $INSTDIR\readme.txt
-    RMDir /r /REBOOTOK $INSTDIR\daemon
     RMDir /r /REBOOTOK $INSTDIR\src
     DeleteRegValue HKCU "${REGKEY}\Components" Main
 SectionEnd
 
 Section -un.post UNSEC0001
     DeleteRegKey HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)"
-    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Uninstall Qcoin.lnk"
-    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Qcoin.lnk"
-    Delete /REBOOTOK "$SMSTARTUP\Qcoin.lnk"
+    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Uninstall PLM.lnk"
+    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\PLM.lnk"
+    Delete /REBOOTOK "$SMSTARTUP\PLM.lnk"
     Delete /REBOOTOK $INSTDIR\uninstall.exe
     Delete /REBOOTOK $INSTDIR\debug.log
     Delete /REBOOTOK $INSTDIR\db.log
