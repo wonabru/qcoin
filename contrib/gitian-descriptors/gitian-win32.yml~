@@ -18,9 +18,9 @@ files:
 - "PLM-0.9.9-linux-gitian.zip"
 script: |
   unzip PLM-0.9.9-linux-gitian.zip
+  cd src
   mkdir release
   touch release/PLM.exe
-  cd src
   #
   cd src
   export LD_PRELOAD=/usr/lib/faketime/libfaketime.so.1

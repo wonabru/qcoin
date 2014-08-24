@@ -28,13 +28,12 @@ script: |
   export TZ=UTC
   #make -f makefile.linux-mingw $MAKEOPTS DEPSDIR=$HOME/build PLMd.exe USE_UPNP=0 DEBUGFLAGS="-frandom-seed=bitcoin"
   cd ..
-  mkdir -p nsis/src
+  mkdir -p nsis
   cd ../qcoin
-  git archive HEAD | tar -x -C ../src/nsis/src
+  git archive HEAD | tar -x -C ../src/nsis
   cd ../src/nsis/src
   mkdir ../release
   cp ../../release/* ../release/
   cp ../../release/*.exe .
-  cd ../../../qcoin
-  makensis share/setup.nsi
-  cp share/PLM-*-win32-setup.exe $OUTDIR/
+  makensis ../../../qcoin/share/setup.nsi
+  cp ../../../qcoin/share/PLM-*-win32-setup.exe $OUTDIR/
