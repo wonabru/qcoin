@@ -73,9 +73,9 @@ script: |
   #make -f makefile.linux-mingw $MAKEOPTS DEPSDIR=$HOME/build PLMd.exe USE_UPNP=0 DEBUGFLAGS="-frandom-seed=bitcoin"
   cd ..
   mkdir nsis
-  cd qcoin
-  git archive HEAD | tar -x -C nsis/src
-  cd ../nsis/src
+  cd ../qcoin
+  git archive HEAD | tar -x -C ../build/nsis/src
+  cd ../build/nsis/src
   mkdir ../release
   cp ../../release/* ../release/
   cp ../../release/*.exe .

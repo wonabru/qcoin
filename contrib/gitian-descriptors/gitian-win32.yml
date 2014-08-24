@@ -72,10 +72,10 @@ script: |
   export TZ=UTC
   #make -f makefile.linux-mingw $MAKEOPTS DEPSDIR=$HOME/build PLMd.exe USE_UPNP=0 DEBUGFLAGS="-frandom-seed=bitcoin"
   cd ..
-  mkdir nsis
+  mkdir -p nsis/src
   cd ../qcoin
-  git archive HEAD | tar -x -C ../build/nsis/src
-  cd ../build/nsis/src
+  git archive HEAD | tar -x -C ../src/nsis/src
+  cd ../src/nsis/src
   mkdir ../release
   cp ../../release/* ../release/
   cp ../../release/*.exe .
