@@ -71,7 +71,7 @@ script: |
   cd ..
   mkdir nsis
   cp -rf src nsis
-  cd nsis
+  cd nsis/src
   mkdir ../release
   cp ../../release/* ../release/
   cp ../../src/*.exe .
