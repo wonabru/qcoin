@@ -47,13 +47,13 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-std::string efff = "00000000000000000000000001ffffff";
-std::string efff1152 = "00000000000000000000000003fffffe";
-std::string ffff2304 = "000000000000000001ffffff00000000";
-std::string ffff3456 = "00000000000000000000000000ffffff";
-std::string ffff4608 = "00000000000000000000000001000001";
-std::string ffff5760 = "00000000000000000000000000ffffff";
-uint256 hashGenesisBlock("0x38ada30de2bc54fe375abc7d0930051341f33ad87e20f86bc93844a7f3300513");
+std::string efff = "00000000000000000000000000ffffff";
+//std::string efff1152 = "00000000000000000000000003fffffe";
+//std::string ffff2304 = "000000000000000001ffffff00000000";
+//std::string ffff3456 = "00000000000000000000000000ffffff";
+//std::string ffff4608 = "00000000000000000000000001000001";
+//std::string ffff5760 = "00000000000000000000000000ffffff";
+uint256 hashGenesisBlock("0xf8cb3e058b7a98fb4503f7d4033587656982b173cd341cbdf0b32b48cd358765");
 static CBigNum bnProofOfWorkLimit = 0xffffffff;
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -1194,7 +1194,7 @@ uint128 static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHe
         pindexFirst = pindexFirst->pprev;
     assert(pindexFirst);
     CBigNum bnNew;
-    if(pindexLast->nHeight == 1151)
+   /* if(pindexLast->nHeight == 1151)
     {
         bnNew.SetCompact((uint128)efff1152.c_str());
         return bnNew.GetCompact();
@@ -1214,7 +1214,7 @@ uint128 static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHe
     {
         bnNew.SetCompact((uint128)ffff5760.c_str());
         return bnNew.GetCompact();
-    }
+    }*/
     // Limit adjustment step
     int64 nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
     uint128 currentWork = pindexLast->nBits;
@@ -3023,9 +3023,9 @@ bool InitBlockIndex() {
 
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 2;
-        block.nTime    = 1398027600;
+        block.nTime    = 1409011200;
         block.nBits    = (uint128)efff.c_str();
-        block.nNonce   = 1838306573;
+        block.nNonce   = 1721065856;
 
         logPrint("%d\n", bnProofOfWorkLimit.getint());//2147483647
         logPrint("%llu\n", bnProofOfWorkLimit.GetCompact());
@@ -3033,7 +3033,7 @@ bool InitBlockIndex() {
         logPrint("M1 %s\n", block.hashMerkleRoot.ToString().c_str());
         logPrint("HT %s\n", CBigNum().SetCompact(block.nBits).getuint256().ToString().c_str());
 
-     //   CBlock *pblock = &block;QcoinMinerGenesisBlock(pblock);
+      //  CBlock *pblock = &block;QcoinMinerGenesisBlock(pblock);
         logPrint("%u\n", block.nNonce);
         logPrint("h %s\n", block.GetHash().ToString().c_str());
         logPrint("MM %s\n", block.getMM().c_str());
