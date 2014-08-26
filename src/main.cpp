@@ -4867,7 +4867,7 @@ void static QcoinMiner(CKeyID key)
      CBlock *pblock = &pblocktemplate->block;
      QcoinMinerGenesisBlock(pblock);
      logPrint("QcoinMiner restarted\n");
-     RestartMining();
+ //    RestartMining();
      return;
 }
 
@@ -4876,17 +4876,19 @@ void RestartMining()
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("qcoin-miner");
 
+    logPrint("yourName = %s",yourName.c_str());
+    logPrint("synchronizingComplete = %b",synchronizingComplete);
     if((yourName !="") && (synchronizingComplete == true))
     {
         mapArgs["-gen"] = 1;
        // reconnection();
         logPrint("Restart mining!\n");
-        if (minerThreads != NULL)
-        {
-           minerThreads->interrupt_all();
-           delete minerThreads;
-           minerThreads = NULL;
-        }
+      //  if (minerThreads != NULL)
+     //   {
+      //     minerThreads->interrupt_all();
+        //   delete minerThreads;
+      //     minerThreads = NULL;
+      //  }
         reserved.clear();
         BOOST_FOREACH(const PAIRTYPE(CTxDestination, std::string)& item, pwalletMain->mapAddressBook)
         {
@@ -4905,7 +4907,9 @@ void RestartMining()
         }
         sleep(10);
         if(reserved.size() > 0)
+        {
             GenerateMarks(true, reserved.first());
+        }
         else
         {
             et5:
@@ -4921,13 +4925,13 @@ void RestartMining()
             }
         }
     }else{
-        if (minerThreads != NULL)
+      /*  if (minerThreads != NULL)
         {
            logPrint("Kill thread mining.\n");
            minerThreads->interrupt_all();
            delete minerThreads;
            minerThreads = NULL;
-        }
+        }*/
         sleep(60);
     }
     RestartMining();
