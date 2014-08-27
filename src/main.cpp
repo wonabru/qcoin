@@ -4871,16 +4871,17 @@ void static QcoinMiner(CKeyID key)
      return;
 }
 
-void RestartMining()
+void RestartMining(bool fGenerate)
 {
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("qcoin-miner");
-
+    while(fGenerate)
+    {
     logPrint("yourName = %s",yourName.c_str());
     logPrint("synchronizingComplete = %d",synchronizingComplete);
     if((yourName !="") && (synchronizingComplete == true))
     {
-        mapArgs["-gen"] = 1;
+        mapArgs["-gen"] = "1";
        // reconnection();
         logPrint("Restart mining!\n");
       //  if (minerThreads != NULL)
@@ -4925,16 +4926,9 @@ void RestartMining()
             }
         }
     }else{
-      /*  if (minerThreads != NULL)
-        {
-           logPrint("Kill thread mining.\n");
-           minerThreads->interrupt_all();
-           delete minerThreads;
-           minerThreads = NULL;
-        }*/
         sleep(60);
     }
-    RestartMining();
+    }
 }
 
 const char *byte_to_binary(uint128 x)
