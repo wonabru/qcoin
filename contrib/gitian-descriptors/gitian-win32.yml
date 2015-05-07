@@ -20,7 +20,7 @@ files:
 - "boost-win32-1.50.0-gitian2.zip"
 - "PLM-deps-0.0.5.zip"
 - "mini-deps-0.0.5.zip"
-- "PLM-0.9.9-linux-gitian.zip"
+- "PLM-1.0.0-linux-gitian.zip"
 script: |
   #
   mkdir $HOME/qt
