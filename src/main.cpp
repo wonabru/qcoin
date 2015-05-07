@@ -2363,16 +2363,41 @@ void reconnection()
 int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBlockPos *dbp)
 {
    // logPrint("ProcessBlock: ACCEPTED\n Adding new information to PLM-network\n");
-
+    int ret = 0;
     CKeyID key = (CKeyID)(pblock->namePubKey);
     CQcoinAddress address;
     address.Set(key);
     std::string blockname = pblock->GetBlockName();
     if(blockname == "")
-        return false;
+        return 1;
+    int pos = blockname.find('/');
+    if(pos > 0)
+    {
+        ret = -1;
+    }
+    pos = blockname.find('.');
+    pos = blockname.find('.',pos+1);
+    if(pos > 0)
+    {
+        ret = -2;
+    }
+    if(ret != 0)
+    {
+      //  pwalletMain->eraseName((CKeyID)(pblock->namePubKey));
+        if(blockname == yourName)
+        {
+            yourName = "";
+        }
+    }
+    CAddress addr;
+    if(ret == 0)
+    {
+        if(ConnectNodeToCheck(addr,pblock->GetBlockName().c_str()) == NULL)
+            ret = -3;
+    }
     pblock->print();
-    int ret = 0;
-    if(address.IsValid() == true)
+
+    if((address.IsValid() == true)&&(ret == 0))
     {
         if(pwalletMain->SetNameBookRegistered(address.Get(),blockname, 2)==false)
               ret = 1;
@@ -2447,33 +2472,9 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
         AddressTableModel atm(pwalletMain);
         atm.setNewName();
     }
-
-
-    string namefake = pblock->GetBlockName();
-    int pos = namefake.find('/');
-    if(pos > 0)
+    if(ret > 0)
     {
-        ret = -1;
-    }
-    pos = namefake.find('.');
-    pos = namefake.find('.',pos+1);
-    if(pos > 0)
-    {
-        ret = -2;
-    }
-    if(ret != 0)
-    {
-        pwalletMain->eraseName((CKeyID)(pblock->namePubKey));
-        if(blockname == yourName)
-        {
-            yourName = "";
-        }
-    }
-    CAddress addr;
-    if(ret == 0)
-    {
-        if(ConnectNodeToCheck(addr,pblock->GetBlockName().c_str()) == NULL)
-            ret = -3;
+       pwalletMain->eraseName((CKeyID)(pblock->namePubKey));
     }
   //  pwalletMain->refresh();
     return ret;
@@ -2561,7 +2562,7 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
         //  logPrint("6\n");
         int ret = acceptNameInQNetwork(state, pfrom, pblock, dbp);
         if(ret == 1)
-            return error("ProcessBlock() : AcceptBlock FAILED. The block name exists in network");
+            return error("ProcessBlock() : AcceptBlock FAILED. The block name exists in network or is empty");
         if(ret == 2)
             return error("ProcessBlock() : AcceptBlock FAILED. Payout is not to accounts in network");
         if(ret == 3)
