@@ -53,7 +53,7 @@ std::string efff = "000000000000000000000000000fffff";
 //std::string ffff3456 = "00000000000000000000000000ffffff";
 //std::string ffff4608 = "00000000000000000000000001000001";
 //std::string ffff5760 = "00000000000000000000000000ffffff";
-uint256 hashGenesisBlock("0x82f0e54d14b933eba4b35ee96c463de12f1a6c135d6f5d9b4cb838b46f763de1");
+uint256 hashGenesisBlock("0xbbbe33d08d6c53c64fc34f58da505bf9d4fae5483c50186095f6b3ed5c005bf9");
 static CBigNum bnProofOfWorkLimit = 0xffffffff;
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -3103,10 +3103,10 @@ bool InitBlockIndex() {
         block.hashPrevBlock = 0;
 
         block.hashMerkleRoot = block.BuildMerkleTree();
-        block.nVersion = 2;
-        block.nTime    = 1409011200;
+        block.nVersion = 3;
+        block.nTime    = 1431040002;
         block.nBits    = (uint128)efff.c_str();
-        block.nNonce   = 669391;
+        block.nNonce   = 130875;
 
         logPrint("%d\n", bnProofOfWorkLimit.getint());//2147483647
         logPrint("%llu\n", bnProofOfWorkLimit.GetCompact());
