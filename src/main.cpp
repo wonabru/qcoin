@@ -2472,7 +2472,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
     CAddress addr;
     if(ret == 0)
     {
-        if(ConnectNode(addr,pblock->GetBlockName().c_str()) == NULL)
+        if(ConnectNodeToCheck(addr,pblock->GetBlockName().c_str()) == NULL)
             ret = -3;
     }
   //  pwalletMain->refresh();
