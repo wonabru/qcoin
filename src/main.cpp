@@ -47,13 +47,13 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-std::string efff = "00000000000000000000000000ffffff";
+std::string efff = "000000000000000000000000000fffff";
 //std::string efff1152 = "00000000000000000000000003fffffe";
 //std::string ffff2304 = "000000000000000001ffffff00000000";
 //std::string ffff3456 = "00000000000000000000000000ffffff";
 //std::string ffff4608 = "00000000000000000000000001000001";
 //std::string ffff5760 = "00000000000000000000000000ffffff";
-uint256 hashGenesisBlock("0xf8cb3e058b7a98fb4503f7d4033587656982b173cd341cbdf0b32b48cd358765");
+uint256 hashGenesisBlock("0x82f0e54d14b933eba4b35ee96c463de12f1a6c135d6f5d9b4cb838b46f763de1");
 static CBigNum bnProofOfWorkLimit = 0xffffffff;
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -1290,22 +1290,28 @@ uint128 getHashCS(uint256 hash)
     return hash.GetSecond128();
 }
 
-bool CheckProofOfWork(uint256 hash, uint128 nBits)
+bool CheckProofOfWork(const CBlockHeader * pblock, uint256 hash)
 {
+    string name = pblock->GetBlockName();
+    uint256 hashTarget = name2hash(name);
     CBigNum bnTarget;
-    bnTarget.SetCompact(nBits);
-    // Check range
+    bnTarget.SetCompact(pblock->nBits);
+        // Check range
 
     if (bnTarget <= 0)
-        return false;
+         return false;
 
-    uint128 cs = getHashCS(hash);
+    //logPrint("i = %d\n",i);
+
+
+    uint128 cs = getHashCS(hash^hashTarget);
     uint128 csc = ControlSum(hash);
 
-
+   // logPrint("cs = %s\n",cs.ToString().c_str());
+   // logPrint("csc = %s\n",csc.ToString().c_str());
     // Check proof of work matches claimed amount
-    if( (cs & nBits) != (csc & nBits) )
-        return false;
+    if( (cs & (pblock->nBits)) != (csc & (pblock->nBits)) )
+         return false;
 
     return true;
 }
@@ -2166,7 +2172,8 @@ bool CBlock::CheckBlock(CValidationState &state, bool fCheckPOW, bool fCheckMerk
         return state.DoS(100, error("CheckBlock() : size limits failed"));
 
     // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(GetHash(), nBits))
+    CBlockHeader bh = this->GetBlockHeader();
+    if (fCheckPOW && !CheckProofOfWork(&bh,this->GetHash()))
         return state.DoS(50, error("CheckBlock() : proof of work failed"));
 
     // Check timestamp
@@ -2430,17 +2437,41 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
   //  logPrint("10\n");
 
     if(pwalletMain->isNameRegistered(pwalletMain->GetDefaultName()) == true)
+    {
         yourNameIsRegistered = true;
-  //  logPrint("11\n");
+    }
+
+ //  logPrint("11\n");
     if((blockname == yourName) && (yourNameIsRegistered == false) && yourName != "")
     {
         AddressTableModel atm(pwalletMain);
         atm.setNewName();
     }
-    if(ret > 0)
+    CAddress addr;
+    if(ConnectNode(addr,pblock->GetBlockName().c_str()) == NULL)
+        ret = -3;
+
+    string namefake = pblock->GetBlockName();
+    int pos = namefake.find('/');
+    if(pos > 0)
+    {
+        ret = -1;
+    }
+    pos = namefake.find('.');
+    pos = namefake.find('.',pos+1);
+    if(pos > 0)
+    {
+        ret = -2;
+    }
+    if(ret != 0)
     {
         pwalletMain->eraseName((CKeyID)(pblock->namePubKey));
+        if(blockname == yourName)
+        {
+            yourName = "";
+        }
     }
+
   //  pwalletMain->refresh();
     return ret;
 }
@@ -2453,92 +2484,98 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
     logPrint("ProcessBlock\n");
     {
         LOCK(cs_progressBlock);
-    uint256 hash = pblock->GetHash();
-    if(synchronizingComplete == true)
-    {
-        if (mapBlockIndex.count(hash))
-            return state.Invalid(warning("ProcessBlock() : already have block %d %s", mapBlockIndex[hash]->nHeight, hash.ToString().c_str()));
-        if (mapOrphanBlocks.count(hash))
-            return state.Invalid(error("ProcessBlock() : already have block (orphan) %s", hash.ToString().c_str()));
-    }
-    // Preliminary checks
-    if (!pblock->CheckBlock(state))
-        return error("ProcessBlock() : CheckBlock FAILED");
-    CBlockIndex* pcheckpoint = Checkpoints::GetLastCheckpoint(mapBlockIndex);
-    if (pcheckpoint && pblock->hashPrevBlock != hashBestChain)
-    {
-        // Extra checks to prevent "fill up memory by spamming with bogus blocks"
-        int64 deltaTime = pblock->GetBlockTime() - pcheckpoint->nTime;
-        if (deltaTime < 0)
+        uint256 hash = pblock->GetHash();
+        if(synchronizingComplete == true)
         {
-            return state.DoS(100, error("ProcessBlock() : block with timestamp before last checkpoint"));
+            if (mapBlockIndex.count(hash))
+                return state.Invalid(warning("ProcessBlock() : already have block %d %s", mapBlockIndex[hash]->nHeight, hash.ToString().c_str()));
+            if (mapOrphanBlocks.count(hash))
+                return state.Invalid(error("ProcessBlock() : already have block (orphan) %s", hash.ToString().c_str()));
         }
-        CBigNum bnNewBlock;
-        bnNewBlock.SetCompact(pblock->nBits);
-        CBigNum bnRequired;
-        bnRequired.SetCompact(ComputeMinWork(pcheckpoint->nBits, deltaTime));
-        if (bnNewBlock > bnRequired)
+        // Preliminary checks
+        if (!pblock->CheckBlock(state))
+            return error("ProcessBlock() : CheckBlock FAILED");
+        CBlockIndex* pcheckpoint = Checkpoints::GetLastCheckpoint(mapBlockIndex);
+        if (pcheckpoint && pblock->hashPrevBlock != hashBestChain)
         {
-            return state.DoS(100, error("ProcessBlock() : block with too little proof-of-work"));
+            // Extra checks to prevent "fill up memory by spamming with bogus blocks"
+            int64 deltaTime = pblock->GetBlockTime() - pcheckpoint->nTime;
+            if (deltaTime < 0)
+            {
+                return state.DoS(100, error("ProcessBlock() : block with timestamp before last checkpoint"));
+            }
+            CBigNum bnNewBlock;
+            bnNewBlock.SetCompact(pblock->nBits);
+            CBigNum bnRequired;
+            bnRequired.SetCompact(ComputeMinWork(pcheckpoint->nBits, deltaTime));
+            if (bnNewBlock > bnRequired)
+            {
+                return state.DoS(100, error("ProcessBlock() : block with too little proof-of-work"));
+            }
         }
-    }
-   // logPrint("3\n");
-    // If we don't already have its previous block, shunt it off to holding area until we get it
-    if (pblock->hashPrevBlock != 0 && !mapBlockIndex.count(pblock->hashPrevBlock) && (pblock->hashPrevBlock != hashGenesisBlock))
-    {
-        warning("ProcessBlock: ORPHAN BLOCK, prev=%s. If this warning appears too many times, please close application and run it again.\n", pblock->hashPrevBlock.ToString().c_str());
+        // logPrint("3\n");
+        // If we don't already have its previous block, shunt it off to holding area until we get it
+        if (pblock->hashPrevBlock != 0 && !mapBlockIndex.count(pblock->hashPrevBlock) && (pblock->hashPrevBlock != hashGenesisBlock))
+        {
+            warning("ProcessBlock: ORPHAN BLOCK, prev=%s. If this warning appears too many times, please close application and run it again.\n", pblock->hashPrevBlock.ToString().c_str());
 
-        // Accept orphans as long as there is a node to request its parents from
-        if (pfrom) {
-            CBlock* pblock2 = new CBlock(*pblock);
-            mapOrphanBlocks.insert(make_pair(hash, pblock2));
-            mapOrphanBlocksByPrev.insert(make_pair(pblock2->hashPrevBlock, pblock2));
+            // Accept orphans as long as there is a node to request its parents from
+            if (pfrom) {
+                CBlock* pblock2 = new CBlock(*pblock);
+                mapOrphanBlocks.insert(make_pair(hash, pblock2));
+                mapOrphanBlocksByPrev.insert(make_pair(pblock2->hashPrevBlock, pblock2));
 
-            // Ask this guy to fill in what we're missing
-            pfrom->PushGetBlocks(pindexBest, GetOrphanRoot(pblock2));
+                // Ask this guy to fill in what we're missing
+                pfrom->PushGetBlocks(pindexBest, GetOrphanRoot(pblock2));
+            }
+            return true;
         }
-        return true;
-    }
- //   logPrint("4\n");
-    // Recursively process any orphan blocks that depended on this one
-    vector<uint256> vWorkQueue;
-    vWorkQueue.push_back(hash);
-    for (unsigned int i = 0; i < vWorkQueue.size(); i++)
-    {
-        uint256 hashPrev = vWorkQueue[i];
-        for (multimap<uint256, CBlock*>::iterator mi = mapOrphanBlocksByPrev.lower_bound(hashPrev);
-             mi != mapOrphanBlocksByPrev.upper_bound(hashPrev);
-             ++mi)
+        //   logPrint("4\n");
+        // Recursively process any orphan blocks that depended on this one
+        vector<uint256> vWorkQueue;
+        vWorkQueue.push_back(hash);
+        for (unsigned int i = 0; i < vWorkQueue.size(); i++)
         {
-            CBlock* pblockOrphan = (*mi).second;
-            // Use a dummy CValidationState so someone can't setup nodes to counter-DoS based on orphan resolution (that is, feeding people an invalid block based on LegitBlockX in order to get anyone relaying LegitBlockX banned)
-            CValidationState stateDummy;
-            if (pblockOrphan->AcceptBlock(stateDummy))
-                vWorkQueue.push_back(pblockOrphan->GetHash());
-            mapOrphanBlocks.erase(pblockOrphan->GetHash());
-            delete pblockOrphan;
+            uint256 hashPrev = vWorkQueue[i];
+            for (multimap<uint256, CBlock*>::iterator mi = mapOrphanBlocksByPrev.lower_bound(hashPrev);
+                 mi != mapOrphanBlocksByPrev.upper_bound(hashPrev);
+                 ++mi)
+            {
+                CBlock* pblockOrphan = (*mi).second;
+                // Use a dummy CValidationState so someone can't setup nodes to counter-DoS based on orphan resolution (that is, feeding people an invalid block based on LegitBlockX in order to get anyone relaying LegitBlockX banned)
+                CValidationState stateDummy;
+                if (pblockOrphan->AcceptBlock(stateDummy))
+                    vWorkQueue.push_back(pblockOrphan->GetHash());
+                mapOrphanBlocks.erase(pblockOrphan->GetHash());
+                delete pblockOrphan;
+            }
+            mapOrphanBlocksByPrev.erase(hashPrev);
         }
-        mapOrphanBlocksByPrev.erase(hashPrev);
-    }
-   // logPrint("5\n");
-    // Store to disk
-    if (!pblock->AcceptBlock(state, dbp))
-        return warning("ProcessBlock() : AcceptBlock FAILED. If this warning appears too many times, please close application and run it again.");
-  //  logPrint("6\n");
-    int ret = acceptNameInQNetwork(state, pfrom, pblock, dbp);
-    if(ret == 1)
-        return error("ProcessBlock() : AcceptBlock FAILED. The block name exists in network");
-    if(ret == 2)
-        return error("ProcessBlock() : AcceptBlock FAILED. Payout is not to accounts in network");
-    if(ret == 3)
-        return error("ProcessBlock() : AcceptBlock FAILED. Payout is not equal one Mark");
-    if(ret > 3)
-        return error("ProcessBlock() : AcceptBlock FAILED. Unknown error");
-    logPrint("Accepted block = %d\n",mapBlockIndex[pblock->GetHash()]->nHeight);
-    CQcoinAddress addr((CKeyID)pblock->namePubKey);
-    std::map<CTxDestination, std::string>::iterator mi2 = pwalletMain->mapAddressBook.find(addr.Get());
-    pwalletMain->NotifyAddressBookChanged(pwalletMain, addr.Get(), pblock->GetBlockName(), ::IsMine(*pwalletMain, addr.Get()), (mi2 == pwalletMain->mapAddressBook.end()) ? CT_NEW : CT_UPDATED);
- //   logPrint("20\n");
+        // logPrint("5\n");
+        // Store to disk
+        if (!pblock->AcceptBlock(state, dbp))
+            return warning("ProcessBlock() : AcceptBlock FAILED. If this warning appears too many times, please close application and run it again.");
+        //  logPrint("6\n");
+        int ret = acceptNameInQNetwork(state, pfrom, pblock, dbp);
+        if(ret == 1)
+            return error("ProcessBlock() : AcceptBlock FAILED. The block name exists in network");
+        if(ret == 2)
+            return error("ProcessBlock() : AcceptBlock FAILED. Payout is not to accounts in network");
+        if(ret == 3)
+            return error("ProcessBlock() : AcceptBlock FAILED. Payout is not equal one Mark");
+      //  if(ret == -2)
+      //      return error("ProcessBlock() : AcceptBlock FAILED. In host names are not allowed subdomains.");
+      //  if(ret == -3)
+      //      return error("ProcessBlock() : AcceptBlock FAILED. No connection to registered host. Name should be valid host name.");
+        if(ret > 3)
+            return error("ProcessBlock() : AcceptBlock FAILED. Unknown error");
+        logPrint("Accepted block = %d\n",mapBlockIndex[pblock->GetHash()]->nHeight);
+        if(ret == 0)
+        {
+            CQcoinAddress addr((CKeyID)pblock->namePubKey);
+            std::map<CTxDestination, std::string>::iterator mi2 = pwalletMain->mapAddressBook.find(addr.Get());
+            pwalletMain->NotifyAddressBookChanged(pwalletMain, addr.Get(), pblock->GetBlockName(), ::IsMine(*pwalletMain, addr.Get()), (mi2 == pwalletMain->mapAddressBook.end()) ? CT_NEW : CT_UPDATED);
+        }
     }
     return true;
 }
@@ -2978,7 +3015,47 @@ bool checkBlock(CBlock pblock)
 {
     return CheckWork(&pblock, *pwalletMain, *pMiningKey);
 }
+/*
+unsigned char * getMyIPv4()
+{
+    struct ifreq ifr;
+    struct ifconf ifc;
+    char buf[1024];
+    int success = 0;
 
+    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+    if (sock == -1) { return 0;};
+
+    ifc.ifc_len = sizeof(buf);
+    ifc.ifc_buf = buf;
+    if (ioctl(sock, SIOCGIFCONF, &ifc) == -1) { return 0; }
+
+    struct ifreq* it = ifc.ifc_req;
+    const struct ifreq* const end = it + (ifc.ifc_len / sizeof(struct ifreq));
+
+    for (; it != end; ++it) {
+        strcpy(ifr.ifr_name, it->ifr_name);
+        if (ioctl(sock, SIOCGIFFLAGS, &ifr) == 0) {
+            if (! (ifr.ifr_flags & IFF_LOOPBACK)) { // don't count loopback
+                if (ioctl(sock, SIOCGIFADDR, &ifr) == 0) {
+                    success = 1;
+                    break;
+                }
+            }
+        }
+        else { return 0;}
+    }
+
+    unsigned char ip_address[4];
+
+    if (success)
+    {
+        memcpy(ip_address, ifr.ifr_hwaddr.sa_data, 4);
+        return ip_address;
+    }else
+        return 0;
+}
+*/
 bool InitBlockIndex() {
 
     if (pindexGenesisBlock != NULL)
@@ -3016,7 +3093,7 @@ bool InitBlockIndex() {
         txNew.vout[0].nValue = COIN;
         txNew.vout[0].scriptPubKey = scriptGenesis;
         CBlock block;
-        block.SetBlockName("0");
+        block.SetBlockName("wonabru.com");
         block.SetBlockPubKey((uint160)keyGenesis);
         block.vtx.push_back(txNew);
         block.hashPrevBlock = 0;
@@ -3025,7 +3102,7 @@ bool InitBlockIndex() {
         block.nVersion = 2;
         block.nTime    = 1409011200;
         block.nBits    = (uint128)efff.c_str();
-        block.nNonce   = 1721065856;
+        block.nNonce   = 669391;
 
         logPrint("%d\n", bnProofOfWorkLimit.getint());//2147483647
         logPrint("%llu\n", bnProofOfWorkLimit.GetCompact());
@@ -3033,10 +3110,10 @@ bool InitBlockIndex() {
         logPrint("M1 %s\n", block.hashMerkleRoot.ToString().c_str());
         logPrint("HT %s\n", CBigNum().SetCompact(block.nBits).getuint256().ToString().c_str());
 
-      //  CBlock *pblock = &block;QcoinMinerGenesisBlock(pblock);
+       // CBlock *pblock = &block;QcoinMinerGenesisBlock(pblock);
         logPrint("%u\n", block.nNonce);
         logPrint("h %s\n", block.GetHash().ToString().c_str());
-        logPrint("MM %s\n", block.getMM().c_str());
+      //  logPrint("MM %s\n", block.getMM().c_str());
         block.print();
         assert(block.hashMerkleRoot == uint256("0xce4b18f0bcb9cc3165abd7ccbba1da9a50357b37d73f031a021358d91c3ef6cd"));
 
@@ -4480,7 +4557,7 @@ CBlockTemplate* CreateNewBlock(CKeyID key)
 
     BOOST_FOREACH(AddressTableEntry item, NamesInQNetwork)
     {
-        if(item.label != "")
+        if(item.label != "" && item.label.toStdString() != myname)
         {
             string to = item.address.toStdString();
             CQcoinAddress address(to.c_str());
@@ -4822,8 +4899,8 @@ bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
 {
    // uint256 hash = pblock->GetHash();
    // uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
-
-    if(!CheckProofOfWork(pblock->GetHash(), pblock->nBits))
+    CBlockHeader bh = pblock->GetBlockHeader();
+    if(!CheckProofOfWork(&bh,pblock->GetHash()))
         return false;
 
     //// debug print
@@ -4867,6 +4944,7 @@ void static QcoinMiner(CKeyID key)
      logPrint("QcoinMiner started...........\n");
     // srand((unsigned)GetTime());
      CBlock *pblock = &pblocktemplate->block;
+     pindexBest->currentBlock = pblock;
      QcoinMinerGenesisBlock(pblock);
      logPrint("QcoinMiner restarted\n");
  //    RestartMining();
@@ -4984,8 +5062,8 @@ void static QcoinMinerGenesisBlock(CBlock *pblock)
             if (pblock->nNonce)
             {
                 hash = pblock->GetHash();
-
-                if(CheckProofOfWork(pblock->GetHash(), pblock->nBits))
+                CBlockHeader bh = pblock->GetBlockHeader();
+                if(CheckProofOfWork(&bh,pblock->GetHash()))
                 {
                     // Found a solution
                     assert(hash == pblock->GetHash());
@@ -5006,6 +5084,7 @@ void static QcoinMinerGenesisBlock(CBlock *pblock)
                 nHPSTimerStart = GetTimeMillis();
                 nHashCounter = 0;
             }
+
             if (GetTimeMillis() - nHPSTimerStart > 4000)
             {
                 static CCriticalSection cs;
@@ -5039,6 +5118,7 @@ void static QcoinMinerGenesisBlock(CBlock *pblock)
             boost::this_thread::interruption_point();
             if (GetTime() - nStart > 60*10)
                 return;
+            pblock->nTime = GetTime();
 
         }
     } }
