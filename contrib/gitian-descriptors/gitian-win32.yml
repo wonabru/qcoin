@@ -47,7 +47,7 @@ script: |
   cd ..
   ls
   #
-  unzip PLM-0.9.9-linux-gitian.zip
+  unzip PLM-1.0.0-linux-gitian.zip
   cp -rf db-4.8.30.NC/build_unix/* .
   #
   find -type f | xargs touch --date="$REFERENCE_DATETIME"
