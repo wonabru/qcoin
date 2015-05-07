@@ -30,7 +30,7 @@ Release Process
  From a directory containing the qcoin source, gitian-builder and gitian.sigs
   
 	export SIGNER=(your gitian key, ie bluematt, sipa, etc)
-	export VERSION=0.9.9
+	export VERSION=1.0.0
 	pushd ./gitian-builder
 
  Fetch and build inputs: (first time, or when dependency versions change)
