@@ -2475,7 +2475,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
         AddressTableModel atm(pwalletMain);
         atm.setNewName();
     }
-    if(ret != 0)
+    if(ret <0 && ret > 1)
     {
        pwalletMain->eraseName((CKeyID)(pblock->namePubKey));
     }
