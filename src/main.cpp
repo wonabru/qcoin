@@ -2397,7 +2397,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
     }
     pblock->print();
 
-    if((address.IsValid() == true)&&(ret == 0))
+    if((address.IsValid() == true))
     {
         if(pwalletMain->SetNameBookRegistered(address.Get(),blockname, 2)==false)
               ret = 1;
@@ -2452,8 +2452,11 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
                 {
                     if(pwalletMain->isNameRegistered(pwalletMain->GetNameAddressBook(keydel)) == true)
                     {
+                        if(ret == 0)
+                        {
                             pwalletMain->eraseName((CKeyID)keydel);
                             pwalletMain->SetNameBookRegistered(address.Get(),blockname, 5);
+                        }
                     }
                 }
             }
@@ -2472,7 +2475,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
         AddressTableModel atm(pwalletMain);
         atm.setNewName();
     }
-    if(ret > 0)
+    if(ret != 0)
     {
        pwalletMain->eraseName((CKeyID)(pblock->namePubKey));
     }
@@ -4511,13 +4514,13 @@ std::string printNamesInQNetwork(string blockname, CTxDestination nameCTx)
                           QString::fromStdString(strName),
                           QString::fromStdString(address.ToString())));
     }
-    const CQcoinAddress address(nameCTx);
+ /*   const CQcoinAddress address(nameCTx);
     const std::string strName = blockname;
     CScript scriptPubKey;
     scriptPubKey.SetDestination(address.Get());
     NamesInQNetwork.append(AddressTableEntry(AddressTableEntry::Sending,
                       QString::fromStdString(strName),
-                      QString::fromStdString(address.ToString())));
+                      QString::fromStdString(address.ToString())));*/
     }
     BOOST_FOREACH(AddressTableEntry item, NamesInQNetwork)
     {
@@ -5013,7 +5016,7 @@ void RestartMining(bool fGenerate)
                 std::string newName = yourName + "/" + newKey.GetID().GetHex();
                 if(pwalletMain->isNameRegistered(newName) == false)
                 {
-                    pwalletMain->SetAddressBookName(newKey.GetID(), newName, 5);
+                    pwalletMain->SetAddressBookName(newKey.GetID(), newName, -1);
                 }else
                     goto et5;
             }
