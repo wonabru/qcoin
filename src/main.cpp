@@ -47,13 +47,13 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-std::string efff = "000000000000000000000000000fffff";
+std::string efff = "00000000000000000000000000ffffff";
 //std::string efff1152 = "00000000000000000000000003fffffe";
 //std::string ffff2304 = "000000000000000001ffffff00000000";
 //std::string ffff3456 = "00000000000000000000000000ffffff";
 //std::string ffff4608 = "00000000000000000000000001000001";
 //std::string ffff5760 = "00000000000000000000000000ffffff";
-uint256 hashGenesisBlock("0xbbbe33d08d6c53c64fc34f58da505bf9d4fae5483c50186095f6b3ed5c005bf9");
+uint256 hashGenesisBlock("0xbee0884a816fe931b15f87b5e78b2123dfded79e8997ae8bbf64a1130a8b2123");
 static CBigNum bnProofOfWorkLimit = 0xffffffff;
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -2392,7 +2392,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
     CAddress addr;
     if(ret == 0)
     {
-        if(ConnectNodeToCheck(addr,pblock->GetBlockName().c_str()) == NULL)
+        if(ConnectNodeToCheck(addr,pblock->GetBlockName().c_str()) == false)
             ret = -3;
     }
     pblock->print();
@@ -3107,9 +3107,9 @@ bool InitBlockIndex() {
 
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 3;
-        block.nTime    = 1431040002;
+        block.nTime    = 1431111114;
         block.nBits    = (uint128)efff.c_str();
-        block.nNonce   = 130875;
+        block.nNonce   = 20996020;
 
         logPrint("%d\n", bnProofOfWorkLimit.getint());//2147483647
         logPrint("%llu\n", bnProofOfWorkLimit.GetCompact());
@@ -3117,7 +3117,7 @@ bool InitBlockIndex() {
         logPrint("M1 %s\n", block.hashMerkleRoot.ToString().c_str());
         logPrint("HT %s\n", CBigNum().SetCompact(block.nBits).getuint256().ToString().c_str());
 
-       // CBlock *pblock = &block;QcoinMinerGenesisBlock(pblock);
+        //CBlock *pblock = &block;QcoinMinerGenesisBlock(pblock);
         logPrint("%u\n", block.nNonce);
         logPrint("h %s\n", block.GetHash().ToString().c_str());
       //  logPrint("MM %s\n", block.getMM().c_str());
