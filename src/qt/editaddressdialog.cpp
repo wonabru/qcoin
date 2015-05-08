@@ -54,7 +54,7 @@ EditAddressDialog::EditAddressDialog(Mode mode, QWidget *parent) :
         ui->labelEdit->setEnabled(false);
         break;
     case EditNotRegisteredAddress:
-        setWindowTitle(tr("Put your valid hostname (max 110 letters; subdomains are not allowed). Host should accept port 8444."));
+        setWindowTitle(tr("Put your valid hostname (max 110 letters; subdomains are not allowed). Host should accept port 8866."));
         ui->addressEdit->setEnabled(true);
         ui->labelEdit->setEnabled(true);
         break;

@@ -177,14 +177,14 @@ void QcoinGUI::createActions()
     tabGroup->addAction(sendCoinsAction);
 
     receiveCoinsAction = new QAction(QIcon(":/icons/receiving_addresses"), tr("Mine Registered"), this);
-    receiveCoinsAction->setStatusTip(tr("Show the list of addresses of mine registered names"));
+    receiveCoinsAction->setStatusTip(tr("Show the list of addresses of mine with registered names"));
     receiveCoinsAction->setToolTip(receiveCoinsAction->statusTip());
     receiveCoinsAction->setCheckable(true);
     receiveCoinsAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_3));
     tabGroup->addAction(receiveCoinsAction);
 
     notRegisteredCoinsAction = new QAction(QIcon(":/icons/receiving_addresses"), tr("Mine not Registered"), this);
-    notRegisteredCoinsAction->setStatusTip(tr("Show the list of addressesof mine not registered names yet"));
+    notRegisteredCoinsAction->setStatusTip(tr("Show the list of addresses of mine with not registered names yet"));
     notRegisteredCoinsAction->setToolTip(notRegisteredCoinsAction->statusTip());
     notRegisteredCoinsAction->setCheckable(true);
     notRegisteredCoinsAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_3));
@@ -205,7 +205,7 @@ void QcoinGUI::createActions()
     tabGroup->addAction(addressBookAction);
 
     editNameAction = new QAction(QIcon(":/icons/address-book"), tr("Registered"), this);
-    editNameAction->setStatusTip(tr("Put your valid hostname (max 110 letters; subdomains are not allowed). Host should accept port 8444."));
+    editNameAction->setStatusTip(tr("Put your valid hostname (max 110 letters; subdomains are not allowed). Host should accept port 8866."));
     editNameAction->setToolTip(editNameAction->statusTip());
     editNameAction->setCheckable(true);
     editNameAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));

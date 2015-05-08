@@ -2397,12 +2397,12 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
     }
     pblock->print();
 
-    if((address.IsValid() == true)&&(ret == 0))
+    if((address.IsValid() == true))
     {
-        if(pwalletMain->SetNameBookRegistered(address.Get(),blockname, 2)==false)
+        if(pwalletMain->SetNameBookRegistered(address.Get(),blockname, -1)==false)
               ret = 1;
     }
-    std::string names = printNamesInQNetwork(blockname, address.Get());
+    printNamesInQNetwork(blockname, address.Get());
   //  logPrint("9 %s\n New name accepted\n",names.c_str());
     vector<CTransaction> tx = pblock->vtx;
     int noVtx = 0;
@@ -2475,7 +2475,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
         AddressTableModel atm(pwalletMain);
         atm.setNewName();
     }
-    if(ret <0 && ret > 1)
+    if(ret <0 || ret > 1)
     {
        pwalletMain->eraseName((CKeyID)(pblock->namePubKey));
     }
@@ -4514,7 +4514,7 @@ std::string printNamesInQNetwork(string blockname, CTxDestination nameCTx)
                           QString::fromStdString(strName),
                           QString::fromStdString(address.ToString())));
     }
- /*   const CQcoinAddress address(nameCTx);
+   /* const CQcoinAddress address(nameCTx);
     const std::string strName = blockname;
     CScript scriptPubKey;
     scriptPubKey.SetDestination(address.Get());
@@ -5018,7 +5018,7 @@ void RestartMining(bool fGenerate)
                     newName = newName.substr(0,110);
                 if(pwalletMain->isNameRegistered(newName) == false)
                 {
-                    pwalletMain->SetAddressBookName(newKey.GetID(), newName, -1);
+                    pwalletMain->SetAddressBookName(newKey.GetID(), newName, 5);
                 }else
                     goto et5;
             }
