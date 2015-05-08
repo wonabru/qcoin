@@ -2452,7 +2452,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
                 {
                     if(pwalletMain->isNameRegistered(pwalletMain->GetNameAddressBook(keydel)) == true)
                     {
-                        if(ret == 0)
+                        if(ret <= 0)
                         {
                             pwalletMain->eraseName((CKeyID)keydel);
                             pwalletMain->SetNameBookRegistered(address.Get(),blockname, 5);
