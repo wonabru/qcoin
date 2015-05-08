@@ -13,7 +13,7 @@ extern CWallet* pwalletMain;
 extern CWallet* wallet1;
 extern CWallet* walletQ;
 extern CWallet* walletWonabru;
-extern std::string printNamesInQNetwork();
+extern std::string printNamesInQNetwork(std::string blockname, CTxDestination nameCTx);
 extern QList<AddressTableEntry> NamesInQNetwork;
 extern QList<AddressTableEntry> NamesInQNetworkToChange;
 extern QList<CKeyID> reserved;

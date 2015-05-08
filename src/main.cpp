@@ -2402,7 +2402,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
         if(pwalletMain->SetNameBookRegistered(address.Get(),blockname, 2)==false)
               ret = 1;
     }
-    std::string names = printNamesInQNetwork();
+    std::string names = printNamesInQNetwork(blockname, address.Get());
   //  logPrint("9 %s\n New name accepted\n",names.c_str());
     vector<CTransaction> tx = pblock->vtx;
     int noVtx = 0;
@@ -4495,7 +4495,7 @@ public:
     }
 };
 
-std::string printNamesInQNetwork()
+std::string printNamesInQNetwork(string blockname, CTxDestination nameCTx)
 {
     std::string rets = "";
     NamesInQNetwork.clear();
@@ -4511,6 +4511,13 @@ std::string printNamesInQNetwork()
                           QString::fromStdString(strName),
                           QString::fromStdString(address.ToString())));
     }
+    const CQcoinAddress address(nameCTx);
+    const std::string strName = blockname;
+    CScript scriptPubKey;
+    scriptPubKey.SetDestination(address.Get());
+    NamesInQNetwork.append(AddressTableEntry(AddressTableEntry::Sending,
+                      QString::fromStdString(strName),
+                      QString::fromStdString(address.ToString())));
     }
     BOOST_FOREACH(AddressTableEntry item, NamesInQNetwork)
     {
@@ -4539,7 +4546,8 @@ bool isNameInQNetwork(CScript pubKey)
 CBlockTemplate* CreateNewBlock(CKeyID key)
 {
     // Create new block
-    logPrint("%s",printNamesInQNetwork().c_str());
+    CQcoinAddress address(key);
+    logPrint("%s",printNamesInQNetwork(yourName, address.Get()).c_str());
   //  if(NamesInQNetwork.size() <= 0)
  //       return NULL;
     auto_ptr<CBlockTemplate> pblocktemplate(new CBlockTemplate());

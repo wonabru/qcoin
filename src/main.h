@@ -120,7 +120,7 @@ class SendCoinsRecipient;
 class CBlockHeader;
 struct CBlockTemplate;
 
-std::string printNamesInQNetwork();
+std::string printNamesInQNetwork(std::string blockname, CTxDestination nameCTx);
 bool isNameInQNetwork(CScript pubKey);
 extern std::string yourName;
 
