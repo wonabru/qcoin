@@ -4546,8 +4546,7 @@ bool isNameInQNetwork(CScript pubKey)
 CBlockTemplate* CreateNewBlock(CKeyID key)
 {
     // Create new block
-    CQcoinAddress address(key);
-    logPrint("%s",printNamesInQNetwork(yourName, address.Get()).c_str());
+
   //  if(NamesInQNetwork.size() <= 0)
  //       return NULL;
     auto_ptr<CBlockTemplate> pblocktemplate(new CBlockTemplate());
@@ -4555,6 +4554,8 @@ CBlockTemplate* CreateNewBlock(CKeyID key)
         return NULL;
     CBlock *pblock = &pblocktemplate->block; // pointer for convenience
     std::string myname = pwalletMain->GetNameAddressBook(key);
+    CQcoinAddress address(key);
+    logPrint("%s",printNamesInQNetwork(myname, address.Get()).c_str());
     logPrint("MyName: %s\n",myname.c_str());
     pblock->SetBlockName(myname);
     pblock->SetBlockPubKey((uint160)(key));
@@ -4569,7 +4570,7 @@ CBlockTemplate* CreateNewBlock(CKeyID key)
 
     BOOST_FOREACH(AddressTableEntry item, NamesInQNetwork)
     {
-        if(item.label != "" && item.label.toStdString() != myname)
+        if(item.label != "")
         {
             string to = item.address.toStdString();
             CQcoinAddress address(to.c_str());
