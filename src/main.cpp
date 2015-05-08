@@ -2424,7 +2424,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
         bool isOK = false;
         if(vtx.vchn.size() > 0)
         {
-            if(ret == 0)
+            if(ret <= 0)
                 isOK = true;
             else
                 isOK = false;
