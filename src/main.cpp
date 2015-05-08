@@ -2369,7 +2369,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
     address.Set(key);
     std::string blockname = pblock->GetBlockName();
     if(blockname == "")
-        return 1;
+        return 2;
     int pos = blockname.find('/');
     if(pos > 0)
     {
@@ -2397,7 +2397,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
     }
     pblock->print();
 
-    if((address.IsValid() == true))
+    if((address.IsValid() == true)&&(ret == 0))
     {
         if(pwalletMain->SetNameBookRegistered(address.Get(),blockname, 2)==false)
               ret = 1;
@@ -2565,9 +2565,9 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
         //  logPrint("6\n");
         int ret = acceptNameInQNetwork(state, pfrom, pblock, dbp);
         if(ret == 1)
-            return error("ProcessBlock() : AcceptBlock FAILED. The block name exists in network or is empty");
+            return error("ProcessBlock() : AcceptBlock FAILED. The block name exists in network");
         if(ret == 2)
-            return error("ProcessBlock() : AcceptBlock FAILED. Payout is not to accounts in network");
+            return error("ProcessBlock() : AcceptBlock FAILED. Payout is not to accounts in network or name is empty");
         if(ret == 3)
             return error("ProcessBlock() : AcceptBlock FAILED. Payout is not equal one Mark");
       //  if(ret == -2)
@@ -5014,6 +5014,8 @@ void RestartMining(bool fGenerate)
             {
                 CPubKey newKey = pwalletMain->GenerateNewKey();
                 std::string newName = yourName + "/" + newKey.GetID().GetHex();
+                if(newName.length() >=110)
+                    newName = newName.substr(0,110);
                 if(pwalletMain->isNameRegistered(newName) == false)
                 {
                     pwalletMain->SetAddressBookName(newKey.GetID(), newName, -1);
