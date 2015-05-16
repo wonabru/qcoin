@@ -2173,6 +2173,7 @@ bool CBlock::CheckBlock(CValidationState &state, bool fCheckPOW, bool fCheckMerk
 
     // Check proof of work matches claimed amount
     CBlockHeader bh = this->GetBlockHeader();
+    logPrint("CheckBlock name = %s\n",bh.GetBlockName().c_str());
     if (fCheckPOW && !CheckProofOfWork(&bh,this->GetHash()))
         return state.DoS(50, error("CheckBlock() : proof of work failed"));
 
