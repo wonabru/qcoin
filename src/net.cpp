@@ -477,7 +477,7 @@ CNode* ConnectNode(CAddress addrConnect, const char *pszDest)
             return pnode;
         }
     }
-   /* if(pnode != NULL)
+    if(pnode != NULL)
     {
         try
         {
@@ -492,8 +492,8 @@ CNode* ConnectNode(CAddress addrConnect, const char *pszDest)
         {
             tryingAddresses[addrConnect]=0;
         }
-    }*/
-    /// debug print
+    }
+    // debug print
     logPrint("trying connection %s lastseen=%.1fhrs\n",
         pszDest ? pszDest : addrConnect.ToString().c_str(),
         pszDest ? 0 : (double)(GetAdjustedTime() - addrConnect.nTime)/3600.0);
@@ -543,7 +543,7 @@ bool ConnectNodeToCheck(CAddress addrConnect, const char *pszDest)
 
     // Connect
     SOCKET hSocket;
-    if (ConnectSocketByName(addrConnect, hSocket, pszDest, 8866))
+    if (ConnectSocketByNameCheck(addrConnect, hSocket, pszDest, 8866))
     {
         return true;
     }

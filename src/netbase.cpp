@@ -504,6 +504,17 @@ bool ConnectSocket(const CService &addrDest, SOCKET& hSocketRet, int nTimeout)
     return true;
 }
 
+bool ConnectSocketCheck(const CService &addrDest, SOCKET& hSocketRet, int nTimeout)
+{
+    proxyType proxy;
+
+    // no proxy needed
+    if (!GetProxy(addrDest.GetNetwork(), proxy))
+        return ConnectSocketDirectly(addrDest, hSocketRet, nTimeout);
+
+    return false;
+}
+
 bool ConnectSocketByName(CService &addr, SOCKET& hSocketRet, const char *pszDest, int portDefault, int nTimeout)
 {
     string strDest;
@@ -537,6 +548,23 @@ bool ConnectSocketByName(CService &addr, SOCKET& hSocketRet, const char *pszDest
 
     hSocketRet = hSocket;
     return true;
+}
+
+bool ConnectSocketByNameCheck(CService &addr, SOCKET& hSocketRet, const char *pszDest, int portDefault, int nTimeout)
+{
+    string strDest;
+    int port = portDefault;
+    SplitHostPort(string(pszDest), port, strDest);
+
+    proxyType nameproxy;
+    GetNameProxy(nameproxy);
+
+    CService addrResolved(CNetAddr(strDest, fNameLookup && !nameproxy.second), port);
+    if (addrResolved.IsValid()) {
+        addr = addrResolved;
+        return ConnectSocketCheck(addr, hSocketRet, nTimeout);
+    }
+    return false;
 }
 
 void CNetAddr::Init()
