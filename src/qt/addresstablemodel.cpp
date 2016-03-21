@@ -355,6 +355,8 @@ bool AddressTableModel::changeName(const QString &label, const QString &addr, st
 
 bool AddressTableModel::changeAddress(const QString &label, const QString &addr, std::string addressOld)
 {
+    if(label == "root")
+        return false;
     std::string name = label.toStdString();
     std::string address = addr.toStdString();
     if(CQcoinAddress(address).IsValid() == true && address != addressOld)

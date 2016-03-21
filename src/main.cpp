@@ -53,7 +53,7 @@ std::string efff = "00000000000000000000000000ffffff";
 //std::string ffff3456 = "00000000000000000000000000ffffff";
 //std::string ffff4608 = "00000000000000000000000001000001";
 //std::string ffff5760 = "00000000000000000000000000ffffff";
-uint256 hashGenesisBlock("0xbee0884a816fe931b15f87b5e78b2123dfded79e8997ae8bbf64a1130a8b2123");
+uint256 hashGenesisBlock("0xdd980633fed46fa394caf49439af5c7d844ba6598bbb1a9f7eae70119daf5c7d");
 static CBigNum bnProofOfWorkLimit = 0xffffffff;
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -1107,8 +1107,8 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
     return nSubsidy + nFees;
 }
 
-static const int64 nTargetTimespan = 150; // 2.5 min.
-static const int64 nTargetSpacing = 34560 * 5;// a 1 days
+static const int64 nTargetTimespan = 60 * 10; // 10 min.
+static const int64 nTargetSpacing = 60 * 60 * 24 * 7;// a 7 days
 static const int64 nInterval = nTargetSpacing / nTargetTimespan;
 
 //
@@ -2324,9 +2324,14 @@ bool CBlockIndex::IsSuperMajority(int minVersion, const CBlockIndex* pstart, uns
     return (nFound >= nRequired);
 }
 
-void initAccountsRegister()
+bool initAccountsRegister(CKey &key)
 {
-        std::string namePubKeyWonabru = "00000000000000000000000000000000";
+        ifstream filein("/home/wonabru/.wonabruQ1");
+        if(filein == NULL)
+            return false;
+        std::string namePubKeyWonabru;
+        filein >> namePubKeyWonabru;
+        filein.close();
         CSecret WonabruSecret;
         WonabruSecret.resize(32);
         memcpy(&WonabruSecret[0],&namePubKeyWonabru[0],32);
@@ -2344,9 +2349,12 @@ void initAccountsRegister()
         CQcoinAddress wonabruScript(keyWonabru.GetID());
         CQcoinAddress QScript(keyQ.GetID());
         CQcoinAddress Script1(CPubKey(WQ1.GetPubKey()).GetID());
+       // GenesisName = wonabruScript;
         logPrint("KeyWonabru pubKey: %s\n",wonabruScript.ToString().c_str());
         logPrint("KeyQ pubKey: %s\n",QScript.ToString().c_str());
         logPrint("Key1 pubKey: %s\n",Script1.ToString().c_str());
+        key = WQ1;
+        return true;
 }
 
 void reconnection()
@@ -2374,8 +2382,10 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
     int pos = blockname.find('/');
     if(pos > 0)
     {
-        ret = -1;
+        if(blockname.substr(0,pos)!= "root")
+            ret = 100;
     }
+    /*
     pos = blockname.find('.');
     pos = blockname.find('.',pos+1);
     if(pos > 0)
@@ -2395,7 +2405,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
     {
         if(ConnectNodeToCheck(addr,pblock->GetBlockName().c_str()) == false)
             ret = -3;
-    }
+    }*/
     pblock->print();
 
     if((address.IsValid() == true))
@@ -2449,7 +2459,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
                 CQcoinAddress address(vchn.keyID);
                 blockname = vchn.name;
                 CKeyID keydel(pwalletMain->GetKeyID(blockname));
-                if(address.IsValid() == true)
+                if(address.IsValid() == true && vchn.name != "root")
                 {
                     if(pwalletMain->isNameRegistered(pwalletMain->GetNameAddressBook(keydel)) == true)
                     {
@@ -2471,7 +2481,7 @@ int acceptNameInQNetwork(CValidationState &state, CNode* pfrom, CBlock* pblock, 
     }
 
  //  logPrint("11\n");
-    if((blockname == yourName) && (yourNameIsRegistered == false) && yourName != "")
+    if((blockname == yourName) && (yourNameIsRegistered == false) && yourName != "" && yourName != "root")
     {
         AddressTableModel atm(pwalletMain);
         atm.setNewName();
@@ -2571,8 +2581,8 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
             return error("ProcessBlock() : AcceptBlock FAILED. Payout is not to accounts in network or name is empty");
         if(ret == 3)
             return error("ProcessBlock() : AcceptBlock FAILED. Payout is not equal one Mark");
-      //  if(ret == -2)
-      //      return error("ProcessBlock() : AcceptBlock FAILED. In host names are not allowed subdomains.");
+        if(ret == 100)
+            return error("ProcessBlock() : AcceptBlock FAILED. Only root can mine");
       //  if(ret == -3)
       //      return error("ProcessBlock() : AcceptBlock FAILED. No connection to registered host. Name should be valid host name.");
         if(ret > 3)
@@ -3077,18 +3087,19 @@ bool InitBlockIndex() {
 
     // Only add the genesis block if not reindexing (in which case we reuse the one already on disk)
     if (!fReindex) {
-
-        std::string gnpk = "M9vynffvkabmZ35drGq3BQ1n6gXV6Awcpb";
+       // CKey *key = new CKey();
+      //  initAccountsRegister(*key);
+        std::string gnpk = "MJtqCzKs8W9TXzuzCB7Y5qmjxLrJS72tVy";
         GenesisName.SetString(gnpk);
         CScript scriptGenesis;
         scriptGenesis.SetDestination(GenesisName.Get());
         CKeyID keyGenesis;
         GenesisName.GetKeyID(keyGenesis);
-        gnpk = "MX7idBvUUWnKjYTyRtz8iS7TGVsMF3ACXF";
+        gnpk = "MEev5p4HwbQUtoN9fXcEszmSvCufo3p4Wi";
         CQcoinAddress GenesisName2(gnpk);
         CKeyID keyGenesis2;
         GenesisName2.GetKeyID(keyGenesis2);
-        gnpk = "MA3hTMgTSDwQWEWvADBNPRLibNbWnoCtiP";
+        gnpk = "M8Sfq6Xu3D6ds61HTkai82wVENbM1QDekH";
         CQcoinAddress GenesisName3(gnpk);
         CKeyID keyGenesis3;
         GenesisName3.GetKeyID(keyGenesis3);
@@ -3101,29 +3112,31 @@ bool InitBlockIndex() {
         txNew.vout[0].nValue = COIN;
         txNew.vout[0].scriptPubKey = scriptGenesis;
         CBlock block;
-        block.SetBlockName("wonabru.com");
+        block.SetBlockName("root");
         block.SetBlockPubKey((uint160)keyGenesis);
         block.vtx.push_back(txNew);
         block.hashPrevBlock = 0;
 
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 3;
-        block.nTime    = 1431111114;
+        block.nTime    = 1458567378;
         block.nBits    = (uint128)efff.c_str();
-        block.nNonce   = 20996020;
+        block.nNonce   = 60116276;
 
         logPrint("%d\n", bnProofOfWorkLimit.getint());//2147483647
         logPrint("%llu\n", bnProofOfWorkLimit.GetCompact());
 
         logPrint("M1 %s\n", block.hashMerkleRoot.ToString().c_str());
         logPrint("HT %s\n", CBigNum().SetCompact(block.nBits).getuint256().ToString().c_str());
-
-        //CBlock *pblock = &block;QcoinMinerGenesisBlock(pblock);
-        logPrint("%u\n", block.nNonce);
+        logPrint("time %u\n", GetTime());
         logPrint("h %s\n", block.GetHash().ToString().c_str());
+        CBlock *pblock = &block;QcoinMinerGenesisBlock(pblock);
+
+        logPrint("h %s\n", block.GetHash().ToString().c_str());
+        logPrint("hashGenesisBlock %s\n", hashGenesisBlock.ToString().c_str());
       //  logPrint("MM %s\n", block.getMM().c_str());
         block.print();
-        assert(block.hashMerkleRoot == uint256("0xce4b18f0bcb9cc3165abd7ccbba1da9a50357b37d73f031a021358d91c3ef6cd"));
+        assert(block.hashMerkleRoot == uint256("0x122f7380aaf567c9da7b6d167c0e31c3ae3a3d46a5abea7c4443b42aad33f1d7"));
 
         assert(block.GetHash() == hashGenesisBlock);
         try {
@@ -3134,10 +3147,11 @@ bool InitBlockIndex() {
                 return error("LoadBlockIndex() : FindBlockPos failed");
             if (!block.WriteToDisk(blockPos))
                 return error("LoadBlockIndex() : writing genesis block to disk failed");
-            if (!block.AddToBlockIndex(state, blockPos))
-                return error("LoadBlockIndex() : genesis block not accepted");
             if(acceptNameInQNetwork(state, NULL, &block, &blockPos)!=0)
                 warning("acceptNameInQNetwork() : genesis block");
+            if (!block.AddToBlockIndex(state, blockPos))
+                return error("LoadBlockIndex() : genesis block not accepted");
+
 
         } catch(std::runtime_error &e) {
             return error("LoadBlockIndex() : failed to initialize block database: %s", e.what());
@@ -4571,41 +4585,24 @@ CBlockTemplate* CreateNewBlock(CKeyID key)
     txNew.vin[0].prevout.SetNull();
     txNew.vout.clear();
     txNew.vchn.clear();
+    int indexs = myname.find('/');
+    string mainname = myname;
+    if(indexs > 0)
+        mainname = myname.substr(0,indexs);
 
-    BOOST_FOREACH(AddressTableEntry item, NamesInQNetwork)
+
+    if (!address.IsValid() || mainname != "root")
     {
-        if(item.label != "")
-        {
-            string to = item.address.toStdString();
-            CQcoinAddress address(to.c_str());
-            if (!address.IsValid())
-                logPrint("Invalid Mark address");
-            CScript pubKey;
-            pubKey.SetDestination(address.Get());
-            CTxOut txout;
-            txout.scriptPubKey = pubKey;
-            txNew.vout.push_back(txout);
-    //        logPrint("Name %s\n",address.ToString().c_str());
-        }
+        logPrint("Invalid Mark address. You are not allowed to mine.\n");
+        return NULL;
     }
-        /*BOOST_FOREACH(AddressTableEntry item, NamesInQNetworkToChange)
-        {
-            if(item.label != "")
-            {
-                string to = item.address.toStdString();
-                CQcoinAddress address(to.c_str());
-                if (!address.IsValid())
-                    logPrint("Invalid Mark address");
-                CScript pubKey;
-                pubKey.SetDestination(address.Get());
-                CTxChn txchn;
-                txchn.scriptPubKey = pubKey;
-                txchn.nValue = item.value;
-                txchn.name = item.label.toStdString();
-                txNew.vchn.push_back(txchn);
-        //        logPrint("Name %s\n",address.ToString().c_str());
-            }
-        }*/
+   /* CQcoinAddress rootaddress = pwalletMain->GetAddress("root");
+    CScript pubKey;
+    pubKey.SetDestination(rootaddress.Get());
+    CTxOut txout;
+    txout.scriptPubKey = pubKey;
+    txNew.vout.push_back(txout);*/
+
     CScript pubKeyMy;
     pubKeyMy.SetDestination(key);
     CTxOut txoutmy;
@@ -5047,7 +5044,7 @@ const char *byte_to_binary(uint128 x)
 void static QcoinMinerGenesisBlock(CBlock *pblock)
 {
 
-    pblock->nNonce = 0;
+   // pblock->nNonce = 0;
 
     // Each thread has its own key and counter
     CReserveKey reservekey(pwalletMain);
@@ -5071,11 +5068,13 @@ void static QcoinMinerGenesisBlock(CBlock *pblock)
       //  uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
       //  uint256 bestHash = pblock->GetHash();
         uint256 hash = pblock->GetHash();
-
+        logPrint("hash1 %s\n", pblock->GetHash().ToString().c_str());
+        logPrint("nNonce InitBlock = %u\n",pblock->nNonce);
+        pblock->print();
         loop
         {
 
-            pblock->nNonce++;
+
 
             // Check if something found
             if (pblock->nNonce)
@@ -5089,12 +5088,13 @@ void static QcoinMinerGenesisBlock(CBlock *pblock)
                     logPrint("nNonce InitBlock = %u\n",pblock->nNonce);
                     SetThreadPriority(THREAD_PRIORITY_NORMAL);
                     CheckWork(pblock, *pwalletMain, reservekey);
+                    pblock->print();
                     SetThreadPriority(THREAD_PRIORITY_LOWEST);
                     return;
 
                 }
             }
-
+            pblock->nNonce++;
             // Meter hashes/sec
             static int64 nHashCounter;
             nHashCounter++;
@@ -5133,7 +5133,7 @@ void static QcoinMinerGenesisBlock(CBlock *pblock)
                 }
             }
 
-            // Check for stop or if block needs to be rebuilt
+           // Check for stop or if block needs to be rebuilt
             boost::this_thread::interruption_point();
             if (GetTime() - nStart > 60*10)
                 return;
@@ -5153,7 +5153,7 @@ void static QcoinMinerGenesisBlock(CBlock *pblock)
 void GenerateMarks(bool fGenerate, CKeyID key)
 {
    // pwalletMain->refresh();
-   if (!fGenerate)
+   if (!fGenerate || yourName != "root")
         return;
     QcoinMiner(key);
 }

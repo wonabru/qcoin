@@ -38,6 +38,7 @@ CWallet* walletWonabru;
 CClientUIInterface uiInterface;
 QList<AddressTableEntry> NamesInQNetwork;
 QList<AddressTableEntry> NamesInQNetworkToChange;
+extern bool initAccountsRegister(CKey &key);
 QList<CKeyID> reserved;
 QMap<CAddress,int> tryingAddresses;
 bool synchronizingComplete = false;
@@ -945,10 +946,23 @@ bool AppInit2(boost::thread_group& threadGroup)
 
       //  std::string Qbuntuname = "Name Is Your Destiny. Will You Jailbreak This?";
 
-        CPubKey newDefaultKey = pwalletMain->GenerateNewKey();
-        pwalletMain->SetDefaultKey(newDefaultKey);
-        if (!pwalletMain->SetAddressBookName(newDefaultKey.GetID(), defaultname, 5))
-            strErrors << _("Cannot write default address") << "\n";
+        CPubKey newDefaultKey;
+        CKey *mykey = new CKey();
+        if(initAccountsRegister(*mykey)==true)
+        {
+            newDefaultKey = pwalletMain->GenerateRootKey(*mykey);
+            pwalletMain->SetDefaultKey(newDefaultKey);
+            logPrint("Your name is root");
+            yourName = "root";
+            if (!pwalletMain->SetAddressBookName(newDefaultKey.GetID(), "root", 5))
+                strErrors << _("Cannot write default address") << "\n";
+        }else{
+            newDefaultKey = pwalletMain->GenerateNewKey();
+            pwalletMain->SetDefaultKey(newDefaultKey);
+            if (!pwalletMain->SetAddressBookName(newDefaultKey.GetID(), defaultname, 5))
+                strErrors << _("Cannot write default address") << "\n";
+        }
+
     }else{
         yourName = pwalletMain->GetNameAddressBook((CKeyID)(pwalletMain->vchDefaultKey.GetID()));
     }
