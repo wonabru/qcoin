@@ -1510,6 +1510,17 @@ public:
         return ret;
     }
 
+    std::string GetBlockBaseName() const
+    {
+        std::string ret = GetBlockName();
+        int index = ret.find('/');
+        if(index > 0)
+        {
+            ret = ret.substr(0,index);
+        }
+        return ret;
+    }
+
     void SetBlockPubKey(uint160 pubKeys)
     {
         namePubKey = pubKeys;

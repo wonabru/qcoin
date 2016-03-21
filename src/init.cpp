@@ -1100,11 +1100,9 @@ bool AppInit2(boost::thread_group& threadGroup)
         pwalletMain->SetBestChain(CBlockLocator(pindexBest));
     }
     uiInterface.InitMessage(_("Loading addresses..."));
-    mainNodes[0] = "195.245.104.3";
-    mainNodes[1] = "195.245.104.23";
+    mainNodes[0] = "10.10.0.2";
+    mainNodes[1] = "10.10.0.15";
     mainNodes[2] = "144.76.238.37";
-    mainNodes[3] = "31.11.209.86";
-    mainNodes[4] = "89.68.221.44";
 
     CAddress addr1;
     ConnectNode(addr1, mainNodes[0].c_str());
@@ -1112,10 +1110,6 @@ bool AppInit2(boost::thread_group& threadGroup)
     ConnectNode(addr2, mainNodes[1].c_str());
     CAddress addr3;
     ConnectNode(addr3, mainNodes[2].c_str());
-    CAddress addr4;
-    ConnectNode(addr4, mainNodes[3].c_str());
-    CAddress addr5;
-    ConnectNode(addr5, mainNodes[4].c_str());
     nStart = GetTimeMillis();
 
     addrman.GetAddr().clear();
@@ -1126,10 +1120,6 @@ bool AppInit2(boost::thread_group& threadGroup)
     addrman.Good(addr2);
     addrman.Add(addr3, addr3);
     addrman.Good(addr3);
-    addrman.Add(addr4, addr4);
-    addrman.Good(addr4);
-    addrman.Add(addr5, addr5);
-    addrman.Good(addr5);
 
     logPrint("Loaded %i addresses from peers.dat  %"PRI64d"ms\n",
            addrman.size(), GetTimeMillis() - nStart);

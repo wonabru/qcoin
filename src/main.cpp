@@ -2231,6 +2231,14 @@ bool CBlock::AcceptBlock(CValidationState &state, CDiskBlockPos *dbp)
     if (mapBlockIndex.count(hash))
         return state.Invalid(error("AcceptBlock() : block already in mapBlockIndex"));
     }
+    map<uint256, CBlockIndex*>::iterator genesisIndex = mapBlockIndex.find(hashGenesisBlock);
+    if(genesisIndex == mapBlockIndex.end())
+        return state.DoS(100, warning("AcceptBlock() : genesis block not found"));
+    CBlockIndex* genesisBlockIndex = (*genesisIndex).second;
+    std::string genesisName = genesisBlockIndex->GetBlockHeader().GetBlockName();
+    std::string blockname = this->GetBlockBaseName();
+    if(blockname != genesisName)
+        return state.DoS(100, warning("AcceptBlock() : Only root can generate names."));
     // Get prev block index
     CBlockIndex* pindexPrev = NULL;
     int nHeight = 0;
@@ -2238,7 +2246,9 @@ bool CBlock::AcceptBlock(CValidationState &state, CDiskBlockPos *dbp)
         map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(hashPrevBlock);
         if (mi == mapBlockIndex.end())
             return state.DoS(10, warning("AcceptBlock() : prev block not found"));
-        pindexPrev = (*mi).second;
+
+
+        pindexPrev-> = (*mi).second;
         nHeight = pindexPrev->nHeight+1;
 
         // Check proof of work
